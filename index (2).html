@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Math Quest — Matematik Tahun 6</title>
+<meta name="description" content="Math Quest: buku teks digital Matematik Tahun 6 KSSR dalam bentuk permainan. Nota interaktif, latih tubi 3 peringkat, ujian bab bermasa dengan analisa.">
+<meta name="theme-color" content="#1B1D36">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --sky1:#5BB8F5; --sky2:#8ED4FF;
+  --dark:#1E1E24; --edge:#17171C;
+  --parch:#F6E7BE; --parch2:#EFD99F; --parch-edge:#8A6B2F;
+  --card:#FFFDF2;
+  --blue:#2E9BFF; --blue-d:#1565C0;
+  --green:#4CC94C; --green-d:#2E8B2E;
+  --red:#FF5252; --red-d:#B71C1C;
+  --yellow:#FFC93C; --yellow-d:#C7920A;
+  --purple:#AE6CF0; --purple-d:#7B3FBF;
+  --orange:#FF9838; --orange-d:#C05F00;
+  --ink:#16305B; --hud:#26262E;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Trebuchet MS','Segoe UI',system-ui,sans-serif;color:#fff;
+  background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 70%,#A8E06B 70.2%,#7BC94F 100%);
+  background-attachment:fixed;min-height:100vh;
+}
+/* Awan & tanah piksel */
+.cloud{position:fixed;background:#FFF;opacity:.92;z-index:0;border-radius:3px;
+  box-shadow:18px 8px 0 #FFF,-16px 10px 0 #FFF,4px -10px 0 #FFF,30px 0 0 #F2FAFF}
+.cloud.c1{width:46px;height:20px;top:8%;left:6%}
+.cloud.c2{width:38px;height:18px;top:16%;right:10%}
+.cloud.c3{width:52px;height:20px;top:38%;left:-8px}
+#ground{position:fixed;left:0;right:0;bottom:0;height:78px;z-index:0;pointer-events:none;
+  background:
+   repeating-linear-gradient(90deg,#7BC94F 0 24px,#6DBA43 24px 48px) top/100% 26px no-repeat,
+   repeating-linear-gradient(90deg,#8B5A2B 0 24px,#7A4B21 24px 48px) bottom/100% 52px no-repeat;
+  border-top:4px solid var(--edge)}
+.wrap{max-width:560px;margin:0 auto;padding:12px 12px 132px;position:relative;z-index:1}
+.hidden{display:none !important}
+button{font-family:inherit;cursor:pointer;color:#fff}
+
+/* ===== Blok piksel asas ===== */
+.pxl{border:3px solid var(--edge);border-radius:9px;
+  box-shadow:0 5px 0 rgba(0,0,0,.35), inset 0 3px 0 rgba(255,255,255,.28)}
+.b3{
+  border:3px solid var(--edge);border-radius:10px;font-weight:900;letter-spacing:.03em;
+  padding:13px 15px;font-size:.98rem;text-transform:uppercase;
+  transition:transform .06s, box-shadow .06s;
+  text-shadow:1px 2px 0 rgba(0,0,0,.35);
+  box-shadow:0 6px 0 var(--edge), inset 0 3px 0 rgba(255,255,255,.3);
+}
+.b3:active{transform:translateY(4px);box-shadow:0 2px 0 var(--edge), inset 0 3px 0 rgba(255,255,255,.3)}
+.b3.blue{background:var(--blue)} .b3.green{background:var(--green)}
+.b3.red{background:var(--red)} .b3.purple{background:var(--purple)}
+.b3.orange{background:var(--orange)}
+.b3.yellow{background:var(--yellow);color:#4A3200;text-shadow:1px 1px 0 rgba(255,255,255,.4)}
+.b3.ghost{background:#4A4E5C}
+.b3.sm{padding:8px 12px;font-size:.8rem;border-radius:9px}
+.b3.full{width:100%;margin-top:14px}
+
+/* ===== HUD ===== */
+.hudrow{display:flex;gap:9px;align-items:stretch;margin-bottom:12px}
+.hud{
+  flex:1;display:flex;gap:10px;align-items:center;background:var(--hud);
+  border:3px solid var(--edge);border-radius:12px;padding:9px 10px;
+  box-shadow:0 5px 0 rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.08);
+}
+.hud .ava{
+  width:54px;height:54px;border-radius:9px;flex:none;font-size:1.7rem;
+  background:linear-gradient(180deg,#3A3F4E,#23262F);
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid var(--edge);box-shadow:inset 0 2px 0 rgba(255,255,255,.15), 0 3px 0 rgba(0,0,0,.3);
+  transition:transform .06s;
+}
+.hud .ava:active{transform:translateY(2px)}
+.hud .who{flex:1;min-width:0}
+.hud .nm{font-weight:900;font-size:.95rem;line-height:1.15;cursor:pointer}
+.hud .ttl{font-size:.66rem;color:var(--yellow);font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+.xpbar{height:13px;border-radius:99px;background:#15161B;overflow:hidden;margin-top:5px;border:2px solid var(--edge)}
+.xpbar>div{height:100%;background:linear-gradient(180deg,#5FB8FF,#1E88E5);transition:width .4s}
+.xptxt{font-size:.6rem;font-weight:800;color:#9BA3B8;margin-top:2px}
+.counters{display:flex;flex-direction:column;gap:7px;justify-content:center}
+.pill{
+  display:flex;align-items:center;gap:6px;background:var(--hud);border:3px solid var(--edge);
+  border-radius:10px;padding:5px 10px;font-weight:900;font-size:.85rem;
+  box-shadow:0 4px 0 rgba(0,0,0,.32), inset 0 2px 0 rgba(255,255,255,.08);
+  white-space:nowrap;
+}
+
+/* ===== Banner tajuk ===== */
+.banner{text-align:center;margin:6px 0 14px;position:relative}
+.banner .crown{font-size:1.5rem;display:block;margin-bottom:-6px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.4))}
+.banner h1{
+  font-size:2.15rem;font-weight:900;letter-spacing:.04em;color:#FFF;line-height:.95;
+  text-shadow:3px 3px 0 var(--edge),-2px -2px 0 var(--edge),2px -2px 0 var(--edge),-2px 2px 0 var(--edge),0 6px 0 rgba(0,0,0,.28);
+}
+.banner h1 .q{color:var(--yellow)}
+.banner .ribbon{
+  display:inline-block;background:var(--purple);border:3px solid var(--edge);border-radius:8px;
+  font-size:.66rem;font-weight:900;letter-spacing:.16em;padding:4px 12px;margin-top:7px;
+  box-shadow:0 4px 0 rgba(0,0,0,.32);text-transform:uppercase;
+}
+
+/* ===== Butang aksi (misi/cabaran/kedai) ===== */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}
+.act{
+  display:flex;gap:10px;align-items:center;text-align:left;
+  border:3px solid var(--edge);border-radius:12px;padding:12px 11px;
+  box-shadow:0 6px 0 var(--edge), inset 0 3px 0 rgba(255,255,255,.3);
+  transition:transform .06s, box-shadow .06s;
+}
+.act:active{transform:translateY(4px);box-shadow:0 2px 0 var(--edge), inset 0 3px 0 rgba(255,255,255,.3)}
+.act .aico{font-size:1.55rem;filter:drop-shadow(0 2px 0 rgba(0,0,0,.3))}
+.act .at{font-weight:900;font-size:.82rem;text-transform:uppercase;text-shadow:1px 2px 0 rgba(0,0,0,.35);line-height:1.1}
+.act .ad{font-size:.64rem;font-weight:700;opacity:.95;margin-top:2px;line-height:1.25}
+.act.green{background:var(--green)} .act.purple{background:var(--purple)}
+.act.orange{background:var(--orange)} .act.blue{background:var(--blue)}
+
+/* ===== Panel perkamen (PILIH TOPIK) ===== */
+.parch{
+  background:var(--parch);border:3px solid var(--edge);border-radius:12px;
+  box-shadow:0 6px 0 rgba(0,0,0,.35), inset 0 0 0 3px var(--parch2);
+  padding:13px;color:#4A3200;
+}
+.parch-title{
+  display:block;margin:-26px auto 10px;width:max-content;
+  background:#2350B8;border:3px solid var(--edge);border-radius:9px;color:#FFF;
+  font-weight:900;font-size:.85rem;letter-spacing:.14em;padding:6px 18px;text-transform:uppercase;
+  box-shadow:0 4px 0 rgba(0,0,0,.32);text-shadow:1px 2px 0 rgba(0,0,0,.4);
+}
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.tcard{
+  background:var(--card);border:3px solid var(--parch-edge);border-radius:10px;
+  padding:11px 9px 9px;text-align:center;color:var(--ink);
+  box-shadow:0 4px 0 rgba(0,0,0,.22), inset 0 2px 0 #FFF;
+  display:flex;flex-direction:column;gap:6px;align-items:center;
+  transition:transform .06s;
+}
+.tcard:active{transform:translateY(3px)}
+.tcard .tico{font-size:1.7rem;filter:drop-shadow(0 2px 0 rgba(0,0,0,.15))}
+.tcard .tnm{font-weight:900;font-size:.72rem;line-height:1.2;text-transform:uppercase;min-height:2.4em;display:flex;align-items:center}
+.tbar{width:100%;height:14px;border:2.5px solid var(--edge);border-radius:99px;background:#E8E2CE;overflow:hidden;position:relative}
+.tbar>div{height:100%;background:linear-gradient(180deg,#6FDD6F,#3AA83A)}
+.tbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:900;color:#1E4B1E}
+.tstars{font-size:.8rem;letter-spacing:.05em}
+.tstars .off{opacity:.25;filter:grayscale(1)}
+.texam{font-size:.6rem;font-weight:900;background:#EDE3C5;border:2px solid var(--parch-edge);border-radius:6px;padding:1px 7px;color:#6B4E12}
+.texam.gA{background:#D8F5D8;border-color:#2E8B2E;color:#1E6B1E}
+.texam.gB{background:#FFF3CE;border-color:#C7920A;color:#8A6400}
+.texam.gC{background:#FFE0E0;border-color:#B71C1C;color:#8E1414}
+
+/* ===== Navigasi bawah ===== */
+#navbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:40;
+  background:var(--dark);border-top:4px solid var(--edge);
+  display:flex;justify-content:center;gap:8px;padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+}
+.nbtn{
+  flex:1;max-width:120px;background:#33343E;border:3px solid var(--edge);border-radius:10px;
+  padding:7px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  box-shadow:0 4px 0 rgba(0,0,0,.4), inset 0 2px 0 rgba(255,255,255,.1);
+  transition:transform .06s;
+}
+.nbtn:active{transform:translateY(3px)}
+.nbtn .nico{font-size:1.15rem}
+.nbtn .nlbl{font-size:.56rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.nbtn.on{background:var(--blue);box-shadow:0 4px 0 var(--blue-d), inset 0 2px 0 rgba(255,255,255,.3)}
+
+/* ===== Panel gelap umum (menu bab dsb.) ===== */
+.panel{
+  background:var(--hud);border:3px solid var(--edge);border-radius:12px;
+  padding:15px;box-shadow:0 6px 0 rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.08);
+}
+.eyebrow{font-size:.64rem;font-weight:900;letter-spacing:.14em;color:var(--yellow);text-transform:uppercase}
+.top-nav{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.progress{flex:1;height:16px;border-radius:99px;background:#15161B;border:3px solid var(--edge);overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(180deg,#6FDD6F,#3AA83A);transition:width .25s}
+.count{font-size:.8rem;font-weight:900;white-space:nowrap;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+.timer{
+  font-size:.92rem;font-weight:900;background:var(--hud);border:3px solid var(--edge);
+  border-radius:10px;padding:5px 10px;white-space:nowrap;font-variant-numeric:tabular-nums;
+  box-shadow:0 3px 0 rgba(0,0,0,.35);
+}
+.timer.low{background:var(--red);animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:.55}}
+.mode-menu{display:grid;gap:13px;margin-top:14px}
+.mode{
+  display:flex;gap:13px;align-items:center;border:3px solid var(--edge);border-radius:13px;
+  padding:15px 14px;text-align:left;color:#fff;transition:transform .06s;
+  box-shadow:0 6px 0 var(--edge), inset 0 3px 0 rgba(255,255,255,.3);
+}
+.mode:active{transform:translateY(4px);box-shadow:0 2px 0 var(--edge), inset 0 3px 0 rgba(255,255,255,.3)}
+.mode.m-nota{background:var(--blue)} .mode.m-latih{background:var(--green)} .mode.m-ujian{background:var(--red)}
+.mode .big{font-size:2rem;filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
+.mode .t{font-weight:900;font-size:1.02rem;text-shadow:1px 2px 0 rgba(0,0,0,.3);text-transform:uppercase}
+.mode .d{font-size:.72rem;opacity:.95;font-weight:700;margin-top:2px}
+.mode.locked{opacity:.55;filter:saturate(.4)}
+
+/* ===== Kad kandungan cerah ===== */
+.paper{
+  background:var(--card);color:var(--ink);border:3px solid var(--edge);border-radius:12px;
+  padding:18px 15px;margin-bottom:13px;position:relative;
+  box-shadow:0 6px 0 rgba(0,0,0,.32), inset 0 3px 0 #FFF;
+}
+.paper .eyebrow{color:#D33}
+.paper h2{font-size:1.18rem;margin:4px 0 9px}
+.note-body{font-size:.94rem;line-height:1.72;white-space:pre-line}
+.note-body b{color:#D33}
+.note-body .eg{display:block;background:#EAF3FF;border:2.5px solid #9CC4F5;border-radius:9px;padding:9px 11px;margin:9px 0;white-space:pre-line}
+.note-body .warn{display:block;background:#FFF0EE;border:2.5px solid #F5A79C;border-radius:9px;padding:9px 11px;margin:9px 0;white-space:pre-line}
+.note-svg svg,#q-diagram svg,#cek-diagram svg{display:block;margin:12px auto 2px;max-width:265px;width:100%;height:auto}
+.cap{display:block;text-align:center;font-size:.68rem;color:#5A6E93;margin-top:4px;font-style:italic}
+.cek{margin-top:15px;border-top:3px dashed #D9CFA8;padding-top:13px}
+.cek .eyebrow{color:#178F5F}
+.cek-q{font-weight:700;margin:8px 0 10px;font-size:.94rem;white-space:pre-line}
+.q-text{font-size:1.04rem;line-height:1.6;font-weight:700;white-space:pre-line}
+.stamp{position:absolute;top:8px;right:12px;font-size:3rem;font-weight:900;transform:rotate(-12deg) scale(0);opacity:0;pointer-events:none;font-family:'Comic Sans MS',cursive}
+.stamp.show{animation:st .35s ease forwards}
+.stamp.ok{color:#178F5F}.stamp.no{color:#D33}
+@keyframes st{0%{transform:rotate(-12deg) scale(0);opacity:0}70%{transform:rotate(-12deg) scale(1.25);opacity:1}100%{transform:rotate(-12deg) scale(1);opacity:1}}
+
+/* ===== Jawapan ===== */
+.answers{display:grid;gap:10px}
+.ans{
+  border:3px solid var(--edge);border-radius:11px;background:var(--card);color:var(--ink);
+  box-shadow:0 5px 0 rgba(0,0,0,.3), inset 0 2px 0 #FFF;padding:13px;text-align:left;
+  font-size:1rem;font-weight:800;display:flex;gap:11px;align-items:baseline;
+  transition:transform .06s, box-shadow .06s;
+}
+.ans:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.ans .tag{
+  font-size:.68rem;font-weight:900;color:#fff;background:var(--blue);border:2px solid var(--edge);
+  border-radius:7px;padding:2px 8px;flex:none;
+}
+.ans.correct{background:#DDF7DD;border-color:#2E8B2E}
+.ans.correct .tag{background:var(--green)}
+.ans.wrong{background:#FFE3E3;border-color:#B71C1C}
+.ans.wrong .tag{background:var(--red)}
+.ans:disabled{cursor:default}
+.feedback{
+  margin-top:13px;border:3px solid var(--edge);border-radius:11px;padding:13px;background:#FFF9DE;color:var(--ink);
+  font-size:.92rem;line-height:1.65;white-space:pre-line;box-shadow:0 5px 0 rgba(0,0,0,.25);
+}
+.feedback .t{font-weight:900;margin-bottom:4px}
+.feedback.good .t{color:#178F5F}.feedback.bad .t{color:#D33}
+.lvl-grid{display:grid;gap:13px;margin-top:14px}
+.xp-pop{position:fixed;font-weight:900;color:var(--yellow);font-size:1.05rem;pointer-events:none;animation:pop 1s ease forwards;z-index:50;text-shadow:2px 2px 0 rgba(0,0,0,.5)}
+@keyframes pop{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-48px)}}
+
+/* ===== Keputusan & analisa ===== */
+.grade-big{font-size:4.3rem;font-weight:900;line-height:1;text-shadow:4px 4px 0 rgba(0,0,0,.35)}
+.confetti{position:fixed;top:-30px;font-size:1.35rem;pointer-events:none;animation:fall 2.6s linear forwards;z-index:60}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.6}}
+.review{display:grid;gap:10px;margin-top:13px}
+.review-item{
+  background:var(--card);color:var(--ink);border:3px solid var(--edge);border-radius:11px;padding:11px 13px;
+  font-size:.85rem;line-height:1.5;box-shadow:0 4px 0 rgba(0,0,0,.25);
+}
+.mark{font-weight:900;margin-right:6px}.mark.ok{color:#178F5F}.mark.no{color:#D33}
+.ana{display:grid;gap:9px;margin-top:12px}
+.ana-row{
+  background:var(--card);color:var(--ink);border:3px solid var(--edge);border-radius:11px;padding:10px 12px;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;
+}
+.ana-row .anm{flex:1;font-weight:800;font-size:.82rem;line-height:1.3}
+.ana-row .abar{flex:none;width:82px;height:12px;border:2px solid var(--edge);border-radius:99px;background:#E5EBF7;overflow:hidden}
+.ana-row .abar>div{height:100%}
+.ana-row .astat{flex:none;font-size:.62rem;font-weight:900;border:2px solid var(--edge);border-radius:7px;padding:3px 7px;color:#fff}
+.astat.kuat{background:var(--green)}
+.astat.sed{background:var(--yellow);color:#4A3200}
+.astat.lemah{background:var(--red)}
+.advice{
+  margin-top:13px;background:#FFF3D6;color:#5A3B00;border:3px solid var(--edge);border-radius:11px;padding:12px;
+  font-size:.86rem;line-height:1.6;font-weight:700;box-shadow:0 4px 0 rgba(0,0,0,.25);
+}
+
+/* ===== Kedai & Misi ===== */
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:12px}
+.sitem{
+  background:var(--card);border:3px solid var(--parch-edge);border-radius:11px;padding:11px 7px 9px;
+  text-align:center;color:var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.22), inset 0 2px 0 #FFF;
+  display:flex;flex-direction:column;gap:6px;align-items:center;
+}
+.sitem .se{font-size:2rem;filter:drop-shadow(0 2px 0 rgba(0,0,0,.15))}
+.sitem .sp{font-size:.72rem;font-weight:900}
+.sbtn{
+  width:100%;border:2.5px solid var(--edge);border-radius:8px;font-weight:900;font-size:.66rem;
+  padding:6px 4px;text-transform:uppercase;box-shadow:0 3px 0 rgba(0,0,0,.3);
+  transition:transform .06s;
+}
+.sbtn:active{transform:translateY(2px)}
+.sbtn.buy{background:var(--yellow);color:#4A3200}
+.sbtn.use{background:var(--blue)}
+.sbtn.used{background:var(--green)}
+.sbtn.cant{background:#9AA0AE;opacity:.7}
+.misi-list{display:grid;gap:11px;margin-top:12px}
+.misi{
+  background:var(--card);color:var(--ink);border:3px solid var(--edge);border-radius:11px;padding:12px;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);display:flex;gap:11px;align-items:center;
+}
+.misi .mico{font-size:1.6rem}
+.misi .mt{flex:1;font-weight:800;font-size:.84rem;line-height:1.3}
+.misi .mprog{font-size:.68rem;font-weight:800;color:#5A6E93}
+.mclaim{
+  border:2.5px solid var(--edge);border-radius:9px;font-weight:900;font-size:.68rem;
+  padding:8px 10px;text-transform:uppercase;box-shadow:0 3px 0 rgba(0,0,0,.3);white-space:nowrap;
+}
+.mclaim.ready{background:var(--yellow);color:#4A3200}
+.mclaim.done{background:var(--green)}
+.mclaim.wait{background:#9AA0AE;opacity:.7}
+
+/* ===== Laporan ===== */
+table.rep{width:100%;border-collapse:collapse;font-size:.74rem;color:#fff}
+table.rep th,table.rep td{border:2px solid var(--edge);padding:6px 5px;text-align:center}
+table.rep th{background:#33343E;font-size:.58rem;text-transform:uppercase}
+table.rep td:first-child{text-align:left;font-weight:800}
+@media (prefers-reduced-motion:reduce){.stamp.show,.confetti,.xp-pop,.timer.low{animation:none}}
+</style>
+</head>
+<body>
+<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+<div id="ground"></div>
+<div class="wrap">
+
+<!-- ============ UTAMA ============ -->
+<div id="s-home">
+  <div class="hudrow">
+    <div class="hud">
+      <button class="ava" id="btn-avatar" title="Tukar avatar">🦁</button>
+      <div class="who">
+        <div class="nm" id="hello">Pelajar Hebat</div>
+        <div class="ttl" id="lvl-line">LVL 1 · Pemula</div>
+        <div class="xpbar"><div id="xp-fill"></div></div>
+        <div class="xptxt" id="xp-txt">0 / 300 XP</div>
+      </div>
+    </div>
+    <div class="counters">
+      <div class="pill">🪙 <span id="c-coin">0</span></div>
+      <div class="pill">💎 <span id="c-gem">0</span></div>
+    </div>
+  </div>
+
+  <div class="banner">
+    <span class="crown">👑</span>
+    <h1>MATH <span class="q">QUEST</span></h1>
+    <span class="ribbon">Belajar · Teroka · Kuasai</span>
+  </div>
+
+  <div class="actions">
+    <button class="act green" id="act-misi">
+      <span class="aico">🗡️</span>
+      <span><span class="at">Misi Harian</span><br><span class="ad">Selesaikan cabaran, tuntut syiling!</span></span>
+    </button>
+    <button class="act purple" id="act-cabaran">
+      <span class="aico">🏆</span>
+      <span><span class="at">Cabaran Harian</span><br><span class="ad">10 soalan campuran + bonus 🪙</span></span>
+    </button>
+    <button class="act orange" id="act-kedai">
+      <span class="aico">🏪</span>
+      <span><span class="at">Kedai</span><br><span class="ad">Beli avatar dengan syiling!</span></span>
+    </button>
+    <button class="act blue" id="act-belajar">
+      <span class="aico">📖</span>
+      <span><span class="at">Pelajaran</span><br><span class="ad">Streak: <span id="c-streak">🔥 0</span> · Nota: <span id="c-notes">0%</span></span></span>
+    </button>
+  </div>
+
+  <div class="parch" style="margin-top:22px" id="topik-sec">
+    <span class="parch-title">Pilih Topik</span>
+    <div class="topics" id="topic-grid"></div>
+  </div>
+</div>
+
+<!-- ============ MENU BAB ============ -->
+<div id="s-bab" class="hidden">
+  <div class="top-nav"><button class="b3 ghost sm" id="bab-back">‹ Peta Dunia</button></div>
+  <div class="panel">
+    <div class="eyebrow" id="bab-eyebrow">Dunia 1</div>
+    <h1 id="bab-title" style="font-size:1.35rem;margin-top:5px"></h1>
+    <div id="bab-desc" style="font-size:.8rem;color:var(--sub);font-weight:700;margin-top:7px;line-height:1.5"></div>
+  </div>
+  <div class="mode-menu">
+    <button class="mode m-nota" id="go-nota">
+      <span class="big">📖</span>
+      <span><span class="t">Nota Interaktif</span><br><span class="d" id="nota-status"></span></span>
+    </button>
+    <button class="mode m-latih" id="go-latih">
+      <span class="big">⚔️</span>
+      <span><span class="t">Latih Tubi</span><br><span class="d">Mudah 🟢 · Sederhana 🟡 · Sukar 🔴</span></span>
+    </button>
+    <button class="mode m-ujian" id="go-ujian">
+      <span class="big">🏁</span>
+      <span><span class="t">Ujian Bab</span><br><span class="d" id="ujian-status">15 soalan · 15 minit · dengan analisa kelemahan</span></span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ NOTA ============ -->
+<div id="s-nota" class="hidden">
+  <div class="top-nav">
+    <button class="b3 ghost sm" id="nota-back">‹</button>
+    <div class="progress"><div id="nota-prog"></div></div>
+    <div class="count" id="nota-count"></div>
+  </div>
+  <div class="paper">
+    <div class="eyebrow" id="nota-eyebrow"></div>
+    <h2 id="nota-title"></h2>
+    <div class="note-body" id="nota-body"></div>
+    <div class="note-svg" id="nota-svg"></div>
+    <div class="cek">
+      <div class="eyebrow">✅ Semak Kefahaman</div>
+      <div class="cek-q" id="cek-q"></div>
+      <div id="cek-diagram"></div>
+      <div class="answers" id="cek-answers"></div>
+      <div class="feedback hidden" id="cek-fb"><div class="t" id="cek-fb-t"></div><div id="cek-fb-w"></div></div>
+    </div>
+  </div>
+  <button class="b3 blue full hidden" id="nota-next">Seterusnya ➜</button>
+</div>
+
+<!-- ============ PILIH PERINGKAT ============ -->
+<div id="s-level" class="hidden">
+  <div class="top-nav"><button class="b3 ghost sm" id="lvl-back">‹ Kembali</button></div>
+  <div class="panel">
+    <div class="eyebrow" id="lvl-eyebrow"></div>
+    <h1 style="font-size:1.25rem;margin-top:5px">Pilih Peringkat ⚔️</h1>
+  </div>
+  <div class="lvl-grid" id="lvl-grid"></div>
+</div>
+
+<!-- ============ KUIZ / UJIAN ============ -->
+<div id="s-quiz" class="hidden">
+  <div class="top-nav">
+    <button class="b3 ghost sm" id="q-quit">✕</button>
+    <div class="progress"><div id="q-prog"></div></div>
+    <div class="count" id="q-count">1/10</div>
+    <div class="timer hidden" id="q-timer">15:00</div>
+  </div>
+  <div class="paper">
+    <div class="eyebrow" id="q-topic"></div>
+    <div class="q-text" id="q-text" style="margin-top:7px"></div>
+    <div id="q-diagram"></div>
+    <div class="stamp" id="stamp"></div>
+  </div>
+  <div class="answers" id="answers"></div>
+  <div class="feedback hidden" id="feedback"><div class="t" id="fb-t"></div><div id="fb-w"></div></div>
+  <button class="b3 blue full hidden" id="q-next">Soalan seterusnya ➜</button>
+</div>
+
+<!-- ============ KEPUTUSAN LATIH TUBI ============ -->
+<div id="s-result" class="hidden">
+  <div class="panel" style="text-align:center">
+    <div class="eyebrow">Keputusan · <span id="res-lvl"></span></div>
+    <div class="grade-big" id="res-grade">A</div>
+    <div style="font-weight:900;font-size:1.3rem" id="res-score"></div>
+    <div style="color:var(--sub);font-weight:700;font-size:.9rem;margin-top:7px" id="res-msg"></div>
+  </div>
+  <div style="display:flex;gap:11px;margin-top:14px">
+    <button class="b3 ghost" style="flex:1" id="res-home">🏠 Utama</button>
+    <button class="b3 green" style="flex:1" id="res-retry">Cuba lagi 🔁</button>
+  </div>
+  <div class="section-title" style="margin-top:22px">📝 Semakan Jawapan</div>
+  <div class="review" id="review"></div>
+</div>
+
+<!-- ============ KEPUTUSAN UJIAN + ANALISA ============ -->
+<div id="s-exresult" class="hidden">
+  <div class="panel" style="text-align:center">
+    <div class="eyebrow">🏁 Keputusan Ujian · <span id="ex-bab"></span></div>
+    <div class="grade-big" id="ex-grade">A</div>
+    <div style="font-weight:900;font-size:1.3rem" id="ex-score"></div>
+    <div style="color:var(--sub);font-weight:700;font-size:.85rem;margin-top:7px" id="ex-meta"></div>
+  </div>
+  <div class="section-title" style="margin-top:20px">🔎 Analisa Subtopik</div>
+  <div class="ana" id="ex-ana"></div>
+  <div class="advice" id="ex-advice"></div>
+  <div style="display:flex;gap:11px;margin-top:16px">
+    <button class="b3 ghost" style="flex:1" id="ex-home">🏠 Utama</button>
+    <button class="b3 blue" style="flex:1" id="ex-nota">📖 Baca Nota</button>
+    <button class="b3 red" style="flex:1" id="ex-retry">Ulang 🔁</button>
+  </div>
+  <div class="section-title" style="margin-top:22px">📝 Semakan Jawapan</div>
+  <div class="review" id="ex-review"></div>
+</div>
+
+<!-- ============ LAPORAN ============ -->
+<div id="s-report" class="hidden">
+  <div class="top-nav"><button class="b3 ghost sm" id="rep-back">‹ Kembali</button></div>
+  <div class="panel">
+    <div class="eyebrow">Laporan Ibu Bapa / Guru</div>
+    <h1 style="font-size:1.25rem;margin:7px 0 3px" id="rep-name"></h1>
+    <div style="font-size:.76rem;color:var(--sub);font-weight:700" id="rep-meta"></div>
+    <div style="overflow-x:auto;margin-top:13px">
+      <table class="rep">
+        <thead><tr><th>Bab</th><th>Nota</th><th>M</th><th>S</th><th>Sk</th><th>🏁 Ujian</th></tr></thead>
+        <tbody id="rep-body"></tbody>
+      </table>
+    </div>
+    <div style="font-size:.68rem;color:var(--sub);margin-top:11px;line-height:1.6">
+      M = Mudah, S = Sederhana, Sk = Sukar.<br>
+      Gred: <b>A</b> ≥ 80% (Sangat Cemerlang) · <b>B</b> 60–79% (Baik) · <b>C</b> 40–59% (Memuaskan) · <b>—</b> belum dicuba / &lt; 40%
+    </div>
+    <button class="b3 yellow full" id="rep-copy">📋 Salin laporan (untuk WhatsApp)</button>
+  </div>
+</div>
+
+
+<!-- ============ KEDAI ============ -->
+<div id="s-shop" class="hidden">
+  <div class="top-nav"><button class="b3 ghost sm" id="shop-back">‹ Kembali</button>
+    <div style="flex:1"></div><div class="pill">🪙 <span id="shop-coin">0</span></div></div>
+  <div class="parch" style="margin-top:20px">
+    <span class="parch-title">🏪 Kedai Avatar</span>
+    <div class="shop-grid" id="shop-grid"></div>
+  </div>
+</div>
+
+<!-- ============ MISI HARIAN ============ -->
+<div id="s-misi" class="hidden">
+  <div class="top-nav"><button class="b3 ghost sm" id="misi-back">‹ Kembali</button></div>
+  <div class="parch" style="margin-top:20px">
+    <span class="parch-title">🗡️ Misi Harian</span>
+    <div style="font-size:.72rem;font-weight:800;color:#6B4E12;text-align:center">Misi ditetapkan semula setiap hari. Tuntut ganjaran syiling!</div>
+    <div class="misi-list" id="misi-list"></div>
+  </div>
+</div>
+
+</div>
+
+<nav id="navbar">
+  <button class="nbtn on" id="nav-home"><span class="nico">🏠</span><span class="nlbl">Utama</span></button>
+  <button class="nbtn" id="nav-misi"><span class="nico">🗡️</span><span class="nlbl">Misi</span></button>
+  <button class="nbtn" id="nav-shop"><span class="nico">🏪</span><span class="nlbl">Kedai</span></button>
+  <button class="nbtn" id="nav-report"><span class="nico">👨‍👩‍👧</span><span class="nlbl">Laporan</span></button>
+</nav>
+
+<script>
+/* ============ STORAN ============ */
+const store=(()=>{let mem={},ok=false;
+  try{localStorage.setItem('__t','1');localStorage.removeItem('__t');ok=true;}catch(e){}
+  return{get(k,d){try{if(ok){const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}}catch(e){}return (k in mem)?mem[k]:d;},
+    set(k,v){mem[k]=v;if(ok){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}}};
+})();
+
+/* ============ UTILITI ============ */
+const ri=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const pick=a=>a[ri(0,a.length-1)];
+const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=ri(0,i);[b[i],b[j]]=[b[j],b[i]];}return b;};
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const fmt=n=>n.toLocaleString('en-MY');
+const rm=n=>'RM'+n.toFixed(2);
+const pad=n=>String(n).padStart(2,'0');
+function frac(a,b){const g=gcd(a,b);a/=g;b/=g;return b===1?String(a):a+'/'+b;}
+function makeOptions(correct,wrongs,f){
+  f=f||(x=>String(x));
+  const seen=new Set([f(correct)]);const out=[correct];
+  for(const w of wrongs){const s=f(w);if(!seen.has(s)){seen.add(s);out.push(w);}if(out.length===4)break;}
+  let bump=1;
+  while(out.length<4&&typeof correct==='number'){
+    const c=correct+bump*(Math.random()<.5?-1:1)*Math.max(1,Math.round(Math.abs(correct)*.12));
+    const s=f(c);if(c>0&&!seen.has(s)){seen.add(s);out.push(c);}bump++;if(bump>60)break;
+  }
+  const sh=shuffle(out);
+  return{options:sh.map(f),answer:sh.findIndex(o=>f(o)===f(correct))};
+}
+function Q(q,correct,wrongs,f,working,svg){
+  if(!Array.isArray(wrongs))wrongs=[wrongs];
+  const o=makeOptions(correct,wrongs,f);
+  return{q,options:o.options,answer:o.answer,working,svg};
+}
+const NAMES=['Aina','Haziq','Mei Ling','Arjun','Siti','Farid','Devi','Wei Jian','Nurul','Azlan'];
+const HONOR=['Puan Salmah','Encik Rahman','Cikgu Tan','Puan Devi','Encik Faizal'];
+
+/* ============ PELUKIS RAJAH ============ */
+const INK='#16305B',RED='#E03A2F',GRN='#178F5F',YEL='#FFC048',SOFT='#5A6E93';
+const CAP='<span class="cap">Rajah tidak mengikut skala</span>';
+const sw=(w,h,i,c)=>`<svg viewBox="0 0 ${w} ${h}" role="img">${i}</svg>`+(c?CAP:'');
+function svgTriangle(b,h){const A=[20,140],B=[230,140],T=[150,25];
+  return sw(250,175,`<polygon points="${A},${B},${T}" fill="#EAF3FB" stroke="${INK}" stroke-width="2.5"/>
+  <line x1="${T[0]}" y1="${T[1]}" x2="${T[0]}" y2="140" stroke="${RED}" stroke-width="2" stroke-dasharray="5,4"/>
+  <rect x="${T[0]-10}" y="130" width="10" height="10" fill="none" stroke="${RED}" stroke-width="1.5"/>
+  <text x="125" y="162" font-size="15" font-weight="bold" fill="${INK}" text-anchor="middle">${b} cm</text>
+  <text x="${T[0]+8}" y="90" font-size="15" font-weight="bold" fill="${RED}">${h} cm</text>`,true);}
+function svgRect(p,l){
+  return sw(250,160,`<rect x="25" y="25" width="200" height="105" fill="#EAF3FB" stroke="${INK}" stroke-width="2.5"/>
+  <text x="125" y="152" font-size="15" font-weight="bold" fill="${INK}" text-anchor="middle">${p} cm</text>
+  <text x="232" y="82" font-size="15" font-weight="bold" fill="${INK}">${l} cm</text>`,true);}
+function svgCuboid(p,l,t){const x=30,y=55,w=140,h=80,dx=45,dy=30;
+  return sw(260,175,`<polygon points="${x},${y} ${x+dx},${y-dy} ${x+dx+w},${y-dy} ${x+w},${y}" fill="#DCE9F5" stroke="${INK}" stroke-width="2"/>
+  <polygon points="${x+w},${y} ${x+dx+w},${y-dy} ${x+dx+w},${y-dy+h} ${x+w},${y+h}" fill="#C9DCEF" stroke="${INK}" stroke-width="2"/>
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#EAF3FB" stroke="${INK}" stroke-width="2.5"/>
+  <text x="${x+w/2}" y="${y+h+22}" font-size="14" font-weight="bold" fill="${INK}" text-anchor="middle">${p} cm</text>
+  <text x="${x+dx+w+6}" y="${y-dy+h/2}" font-size="14" font-weight="bold" fill="${INK}">${l} cm</text>
+  <text x="${x-6}" y="${y+h/2+5}" font-size="14" font-weight="bold" fill="${RED}" text-anchor="end">${t} cm</text>`,true);}
+function svgPie(a,b){const cx=90,cy=90,r=70;let p='';
+  for(let i=0;i<b;i++){const a1=(i/b)*2*Math.PI-Math.PI/2,a2=((i+1)/b)*2*Math.PI-Math.PI/2;
+    p+=`<path d="M${cx},${cy} L${(cx+r*Math.cos(a1)).toFixed(1)},${(cy+r*Math.sin(a1)).toFixed(1)} A${r},${r} 0 0 1 ${(cx+r*Math.cos(a2)).toFixed(1)},${(cy+r*Math.sin(a2)).toFixed(1)} Z" fill="${i<a?GRN:'#FFF'}" stroke="${INK}" stroke-width="2"/>`;}
+  return sw(180,180,p,false);}
+function svgBars(vals){const w=Math.max(220,vals.length*48),max=Math.max(...vals);let b='';
+  vals.forEach((v,i)=>{const bh=Math.max(8,(v/max)*95),x=20+i*44;
+    b+=`<rect x="${x}" y="${125-bh}" width="30" height="${bh}" fill="${YEL}" stroke="${INK}" stroke-width="2" rx="3"/>
+    <text x="${x+15}" y="${117-bh}" font-size="13" font-weight="bold" fill="${INK}" text-anchor="middle">${v}</text>`;});
+  return sw(w,150,`<line x1="12" y1="125" x2="${w-8}" y2="125" stroke="${INK}" stroke-width="2"/>`+b,false);}
+function svgClock(h,m){const cx=85,cy=85,r=70;let t='';
+  for(let i=0;i<12;i++){const a=i/12*2*Math.PI;
+    t+=`<line x1="${(cx+(r-8)*Math.sin(a)).toFixed(1)}" y1="${(cy-(r-8)*Math.cos(a)).toFixed(1)}" x2="${(cx+r*Math.sin(a)).toFixed(1)}" y2="${(cy-r*Math.cos(a)).toFixed(1)}" stroke="${INK}" stroke-width="${i%3===0?3:1.5}"/>`;}
+  const ha=((h%12)+m/60)/12*2*Math.PI,ma=m/60*2*Math.PI;
+  return sw(170,170,`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFF" stroke="${INK}" stroke-width="3"/>${t}
+  <line x1="${cx}" y1="${cy}" x2="${(cx+38*Math.sin(ha)).toFixed(1)}" y2="${(cy-38*Math.cos(ha)).toFixed(1)}" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>
+  <line x1="${cx}" y1="${cy}" x2="${(cx+55*Math.sin(ma)).toFixed(1)}" y2="${(cy-55*Math.cos(ma)).toFixed(1)}" stroke="${RED}" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="${cx}" cy="${cy}" r="4" fill="${INK}"/>`,false);}
+function svgAngle(deg){const cx=40,cy=130,L=170;
+  const a=-deg*Math.PI/180;
+  const x2=cx+L*Math.cos(a),y2=cy+L*Math.sin(a);
+  const rr=34,ax=cx+rr,bx=cx+rr*Math.cos(a),by=cy+rr*Math.sin(a);
+  return sw(250,160,`<line x1="${cx}" y1="${cy}" x2="${cx+L}" y2="${cy}" stroke="${INK}" stroke-width="3"/>
+  <line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${INK}" stroke-width="3"/>
+  <path d="M${ax},${cy} A${rr},${rr} 0 0 0 ${bx.toFixed(1)},${by.toFixed(1)}" fill="none" stroke="${RED}" stroke-width="2.5"/>
+  <text x="${cx+50}" y="${cy-14}" font-size="15" font-weight="bold" fill="${RED}">${deg}°</text>`,false);}
+function svgPolygon(n,label){const cx=95,cy=90,r=68;let pts=[];
+  for(let i=0;i<n;i++){const a=(i/n)*2*Math.PI-Math.PI/2;pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}
+  return sw(190,180,`<polygon points="${pts.join(' ')}" fill="#EAF3FB" stroke="${INK}" stroke-width="2.5"/>`+
+    (label?`<text x="${cx}" y="${cy+5}" font-size="14" font-weight="bold" fill="${INK}" text-anchor="middle">${label}</text>`:''),false);}
+function svgCircle(j,showD){const cx=95,cy=90,r=68;
+  return sw(190,185,`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#EAF3FB" stroke="${INK}" stroke-width="2.5"/>
+  <circle cx="${cx}" cy="${cy}" r="3.5" fill="${INK}"/>
+  <line x1="${cx}" y1="${cy}" x2="${cx+r}" y2="${cy}" stroke="${GRN}" stroke-width="2.5"/>
+  <text x="${cx+r/2}" y="${cy-8}" font-size="13" font-weight="bold" fill="${GRN}" text-anchor="middle">j = ${j} cm</text>`+
+  (showD?`<line x1="${cx-r}" y1="${cy}" x2="${cx+r}" y2="${cy}" stroke="${RED}" stroke-width="2.5" stroke-dasharray="6,4"/>
+  <text x="${cx}" y="${cy+24}" font-size="13" font-weight="bold" fill="${RED}" text-anchor="middle">diameter = ?</text>`:''),false);}
+function svgCoords(x1,y1,x2,y2){const S=24,OX=30,OY=155;
+  let g='';
+  for(let i=0;i<=7;i++){g+=`<line x1="${OX+i*S}" y1="${OY}" x2="${OX+i*S}" y2="${OY-6*S}" stroke="#DCE9F5" stroke-width="1.5"/>
+    <text x="${OX+i*S}" y="${OY+16}" font-size="11" fill="${SOFT}" text-anchor="middle">${i}</text>`;}
+  for(let i=0;i<=6;i++){g+=`<line x1="${OX}" y1="${OY-i*S}" x2="${OX+7*S}" y2="${OY-i*S}" stroke="#DCE9F5" stroke-width="1.5"/>
+    <text x="${OX-10}" y="${OY-i*S+4}" font-size="11" fill="${SOFT}" text-anchor="middle">${i}</text>`;}
+  const px=x=>OX+x*S, py=y=>OY-y*S;
+  return sw(240,185,g+
+  `<line x1="${OX}" y1="${OY}" x2="${OX+7*S}" y2="${OY}" stroke="${INK}" stroke-width="2"/>
+   <line x1="${OX}" y1="${OY}" x2="${OX}" y2="${OY-6*S}" stroke="${INK}" stroke-width="2"/>
+   <line x1="${px(x1)}" y1="${py(y1)}" x2="${px(x2)}" y2="${py(y2)}" stroke="${RED}" stroke-width="2" stroke-dasharray="5,4"/>
+   <circle cx="${px(x1)}" cy="${py(y1)}" r="5" fill="${GRN}" stroke="${INK}" stroke-width="1.5"/>
+   <circle cx="${px(x2)}" cy="${py(y2)}" r="5" fill="${YEL}" stroke="${INK}" stroke-width="1.5"/>
+   <text x="${px(x1)+8}" y="${py(y1)-8}" font-size="12" font-weight="bold" fill="${INK}">A(${x1}, ${y1})</text>
+   <text x="${px(x2)+8}" y="${py(y2)-8}" font-size="12" font-weight="bold" fill="${INK}">B(${x2}, ${y2})</text>`,false);}
+function svgPlace(){
+  const cols=['JUTA','RATUS RIBU','PULUH RIBU','RIBU','RATUS','PULUH','SA'];
+  const digs=['4','7','2','8','1','5','9'];
+  let c='';cols.forEach((h,i)=>{const x=8+i*34;
+    c+=`<rect x="${x}" y="30" width="32" height="46" fill="${i===0?'#FFF6DC':'#EAF3FB'}" stroke="${INK}" stroke-width="1.5"/>
+    <text x="${x+16}" y="60" font-size="18" font-weight="bold" fill="${i===0?RED:INK}" text-anchor="middle">${digs[i]}</text>
+    <text x="${x+16}" y="24" font-size="6.5" font-weight="bold" fill="${SOFT}" text-anchor="middle">${h}</text>`;});
+  return sw(250,90,c,false);}
+
+/* =====================================================
+   DATA BAB — nota mendalam & penjana soalan bertag
+   Kandungan asli, meliputi silibus KSSR Tahun 6.
+===================================================== */
+const BABS=[
+/* ================= BAB 1 ================= */
+{id:'b1',ico:'🔢',c1:'#FF9F43',c2:'#E5652E',name:'Nombor Bulat dan Operasi',
+ desc:'Nombor hingga 10 juta · pola nombor · pecahan & perpuluhan juta · operasi asas & bergabung · anu · nombor perdana',
+ nota:[
+  {t:'Nilai tempat hingga 10 juta',
+   body:'Setiap digit dalam nombor besar ada "rumah" sendiri — inilah <b>nilai tempat</b>.\nDari kanan: sa, puluh, ratus, ribu, puluh ribu, ratus ribu, dan <b>juta</b>.\n<span class="eg">Contoh 1:\n4 728 159 dibaca "empat juta tujuh ratus dua puluh lapan ribu satu ratus lima puluh sembilan".\nDigit 4 → nilai tempat juta → nilai digit 4 000 000</span><span class="eg">Contoh 2:\nDalam 9 054 320, digit 5 berada di tempat puluh ribu.\nNilai digit = 5 × 10 000 = 50 000</span><span class="warn">⚠️ Awas: Jangan keliru "nilai tempat" (nama rumah) dengan "nilai digit" (berapa nilainya). Digit 7 di tempat ratus ribu → nilai tempatnya ratus ribu, nilai digitnya 700 000.</span>',
+   svg:svgPlace(),
+   q:Q('Dalam nombor 4 728 159, apakah nilai digit 7?',
+     '700 000',['70 000','7 000 000','7 000'],x=>x,
+     'Digit 7 berada di tempat ratus ribu.\nNilai digit = 7 × 100 000 = 700 000')},
+  {t:'Pola nombor',
+   body:'Pola nombor ialah susunan nombor yang mengikut <b>peraturan tetap</b> — menaik atau menurun.\nLangkah menyelesaikan:\n1️⃣ Cari beza antara dua nombor bersebelahan\n2️⃣ Pastikan beza itu sama di seluruh pola\n3️⃣ Guna peraturan itu untuk cari nombor tertinggal\n<span class="eg">Contoh 1 (menaik):\n1 200, 1 450, 1 700, 1 950, ...\nBeza: 1 450 − 1 200 = 250 → peraturan +250\nSeterusnya: 1 950 + 250 = 2 200</span><span class="eg">Contoh 2 (menurun):\n8 400, 8 100, 7 800, ____\nPeraturan −300 → 7 800 − 300 = 7 500</span><span class="warn">⚠️ Awas: Sesetengah pola berganda (×2, ×10). Sentiasa semak dua tiga beza dulu sebelum jawab!</span>',
+   q:Q('2 400, 2 700, 3 000, 3 300, ____\nApakah nombor seterusnya?',
+     '3 600',['3 500','3 400','3 700'],x=>x,
+     'Beza: 2 700 − 2 400 = 300 → peraturan +300\n3 300 + 300 = 3 600')},
+  {t:'Pecahan & perpuluhan juta',
+   body:'Nombor besar boleh ditulis ringkas menggunakan perkataan "juta" — begitulah gaya berita dan surat khabar!\n<span class="eg">Pecahan juta:\n1/4 juta = 1 000 000 ÷ 4 = 250 000\n1/2 juta = 500 000\n3/4 juta = 750 000</span><span class="eg">Perpuluhan juta:\n0.3 juta = 0.3 × 1 000 000 = 300 000\n1.25 juta = 1 250 000\n7.06 juta = 7 060 000</span><span class="warn">⚠️ Awas: 1.2 juta BUKAN 1 000 200! Darabkan keseluruhan nombor perpuluhan dengan 1 000 000.</span>',
+   q:Q('0.75 juta sama dengan',
+     '750 000',['75 000','700 050','7 500 000'],x=>x,
+     '0.75 × 1 000 000 = 750 000')},
+  {t:'Tambah dan tolak nombor besar',
+   body:'Kunci tambah/tolak nombor besar: <b>susun ikut nilai tempat</b> dan kerja dari kanan ke kiri.\n<span class="eg">Contoh 1 (tambah dengan mengumpul semula):\n  467 285\n+ 128 946\n————————\n  596 231\nSa: 5+6=11, tulis 1 bawa 1. Teruskan ke kiri.</span><span class="eg">Contoh 2 (tolak dengan meminjam):\n  703 500\n−  86 250\n————————\n  617 250</span><span class="warn">⚠️ Awas: Semak jawapan dengan operasi songsang! Tolak boleh disemak dengan tambah: 617 250 + 86 250 = 703 500 ✓</span>',
+   q:Q('524 380 + 179 650 =',
+     '704 030',['703 030','694 030','704 930'],x=>x,
+     'Susun ikut nilai tempat:\n524 380 + 179 650 = 704 030\nSemak: 704 030 − 179 650 = 524 380 ✓')},
+  {t:'Darab dan bahagi',
+   body:'<b>Darab</b> nombor besar: pecahkan mengikut nilai tempat, atau darab lazim.\n<span class="eg">Contoh: 2 340 × 6\n2 000×6 = 12 000\n300×6 = 1 800\n40×6 = 240\nJumlah = 14 040</span>\n<b>Bahagi</b>: guna bahagi panjang, dan sentiasa semak dengan darab.\n<span class="eg">Contoh: 4 512 ÷ 12\n4 512 ÷ 12 = 376\nSemak: 376 × 12 = 4 512 ✓</span><span class="warn">⚠️ Awas untuk bahagi dengan baki: 100 ÷ 7 = 14 baki 2. Dalam soalan cerita, fikir sama ada baki perlu dibundarkan ke atas (contoh: bilangan van diperlukan) atau dibuang.</span>',
+   q:Q('3 264 ÷ 8 =',
+     '408',['48','407','480'],x=>x,
+     '3 264 ÷ 8 = 408\nSemak: 408 × 8 = 3 264 ✓')},
+  {t:'Operasi bergabung & anu',
+   body:'Apabila ada campuran operasi, ikut <b>tertib operasi</b>:\n1️⃣ Kurungan ( ) dahulu\n2️⃣ Darab ÷ Bahagi (kiri ke kanan)\n3️⃣ Tambah & Tolak (kiri ke kanan)\n<span class="eg">Contoh 1:\n50 + 6 × 4 = 50 + 24 = 74 (bukan 224!)</span><span class="eg">Contoh 2:\n(50 + 6) × 4 = 56 × 4 = 224 — kurungan mengubah segalanya!</span>\n<b>Anu</b> ialah nilai tersembunyi dalam ayat matematik. Cari dengan operasi songsang:\n<span class="eg">____ − 350 = 1 200\nAnu = 1 200 + 350 = 1 550</span>',
+   q:Q('120 − 45 ÷ 9 =',
+     '115',['8.3','25','84'],x=>x,
+     'Bahagi dahulu: 45 ÷ 9 = 5\n120 − 5 = 115')},
+  {t:'Nombor perdana & gubahan',
+   body:'<b>Nombor perdana</b>: nombor yang hanya boleh dibahagi tepat dengan 1 dan dirinya sendiri (tepat 2 faktor).\n<span class="eg">Perdana hingga 50:\n2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47</span>\n<b>Nombor gubahan</b>: ada lebih daripada 2 faktor.\n<span class="eg">Contoh: 15 ialah gubahan kerana faktornya 1, 3, 5, 15.</span><span class="warn">⚠️ Awas:\n• Nombor 1 BUKAN perdana dan BUKAN gubahan (hanya 1 faktor)\n• Nombor 2 ialah SATU-SATUNYA perdana genap\n• 91 nampak macam perdana, tapi 91 = 7 × 13 — gubahan!</span>',
+   q:Q('Yang manakah nombor perdana?',
+     '17',['15','21','27'],x=>x,
+     '17 hanya boleh dibahagi tepat dengan 1 dan 17.\n15 = 3×5, 21 = 3×7, 27 = 3×9 — semuanya gubahan.')},
+ ],
+ gens:{
+  1:[
+   {t:'Nilai tempat',g:()=>{const n=ri(1000000,9899999);const s=String(n);const pos=ri(0,2);const names=['juta','ratus ribu','puluh ribu'];const vals=[1000000,100000,10000];
+     const d=+s[pos];const ans=d*vals[pos];
+     return Q(`Dalam nombor ${fmt(n)}, apakah nilai digit di tempat ${names[pos]}?`,ans,[Math.max(1,d)*vals[pos]/10,d*vals[pos]*10,d],fmt,
+       `Digit ${d} di tempat ${names[pos]}.\nNilai = ${d} × ${fmt(vals[pos])} = ${fmt(ans)}`);}},
+   {t:'Tambah & tolak',g:()=>{const a=ri(1200,4800),b=ri(500,999);const ans=a+b;
+     return Q(`${fmt(a)} + ${fmt(b)} =`,ans,[a-b,ans+10,ans-100],fmt,`Susun ikut nilai tempat, kemudian tambah.\n${fmt(a)} + ${fmt(b)} = ${fmt(ans)}`);}},
+   {t:'Pola nombor',g:()=>{const step=pick([100,150,200,250,500]);const st=ri(10,40)*100;const seq=[st,st+step,st+2*step,st+3*step];const ans=st+4*step;
+     return Q(`${seq.map(fmt).join(', ')}, ____\nApakah nombor seterusnya?`,ans,[ans+step,ans-step,ans+step/2],fmt,
+       `Peraturan pola: +${fmt(step)} setiap kali.\n${fmt(seq[3])} + ${fmt(step)} = ${fmt(ans)}`);}},
+  ],
+  2:[
+   {t:'Pembundaran',g:()=>{const n=ri(1000000,9899999);const pl=pick([['ratus ribu',100000],['puluh ribu',10000],['ribu',1000]]);
+     const ans=Math.round(n/pl[1])*pl[1];
+     return Q(`Bundarkan ${fmt(n)} kepada ${pl[0]} yang terdekat.`,ans,[Math.floor(n/pl[1])*pl[1],Math.ceil(n/pl[1])*pl[1],Math.round(n/(pl[1]*10))*pl[1]*10],fmt,
+       `Lihat digit di sebelah kanan tempat ${pl[0]}: jika 5 ke atas, bundarkan ke atas.\n${fmt(n)} ➜ ${fmt(ans)}`);}},
+   {t:'Operasi bergabung',g:()=>{const a=ri(12,60),b=ri(3,9),c=ri(11,45);const ans=c+a*b;
+     return Q(`${fmt(c)} + ${a} × ${b} =`,ans,[(c+a)*b,c+a+b,Math.abs(a*b-c)],fmt,`Darab dahulu: ${a} × ${b} = ${fmt(a*b)}\n${fmt(c)} + ${fmt(a*b)} = ${fmt(ans)}`);}},
+   {t:'Bahagi',g:()=>{const b=ri(12,25),q=ri(120,480),a=b*q;
+     return Q(`${fmt(a)} ÷ ${b} =`,q,[q+b,q-ri(2,9),q+ri(2,9)],fmt,`${fmt(a)} ÷ ${b} = ${fmt(q)}\nSemak: ${fmt(q)} × ${b} = ${fmt(a)} ✓`);}},
+   {t:'Anu',g:()=>{const a=ri(1200,9800),b=ri(300,999);const ans=a+b;
+     return Q(`____ − ${fmt(b)} = ${fmt(a)}\nApakah nilai anu itu?`,ans,[a-b,ans+100,ans-90],fmt,`Anu = ${fmt(a)} + ${fmt(b)} = ${fmt(ans)}`);}},
+  ],
+  3:[
+   {t:'Pecahan/perpuluhan juta',g:()=>{const num=pick([[1,4,250000],[1,2,500000],[3,4,750000],[1,5,200000],[2,5,400000]]);
+     return Q(`${num[0]}/${num[1]} juta sama dengan`,num[2],[num[2]/10,num[2]*10,1000000-num[2]],fmt,
+       `${num[0]}/${num[1]} × 1 000 000 = ${fmt(num[2])}`);}},
+   {t:'Masalah 2 langkah',g:()=>{const k=ri(3,6),setiap=ri(120,350),lebih=ri(50,200);const ans=k*setiap+lebih;
+     return Q(`Sebuah kilang menghasilkan ${fmt(setiap)} biji roti setiap hari selama ${k} hari. Pada hari berikutnya, kilang itu menghasilkan ${fmt(lebih)} biji roti lagi. Berapakah jumlah roti yang dihasilkan?`,
+       ans,[k*setiap,k*(setiap+lebih),Math.abs(ans-lebih*2)],fmt,
+       `${k} hari: ${k} × ${fmt(setiap)} = ${fmt(k*setiap)}\nJumlah = ${fmt(k*setiap)} + ${fmt(lebih)} = ${fmt(ans)}`);}},
+   {t:'Nombor perdana',g:()=>{const primes=[11,13,17,19,23,29,31,37,41,43];const comps=[15,21,25,27,33,35,39,45,49,51];
+     const p=pick(primes);const w=shuffle(comps).slice(0,3);
+     return Q(`Yang manakah nombor perdana?`,String(p),w.map(String),x=>x,
+       `${p} hanya boleh dibahagi tepat dengan 1 dan ${p}.\nNombor lain mempunyai faktor lain (nombor gubahan).`);}},
+   {t:'Operasi bergabung',g:()=>{const a=ri(20,60),b=ri(3,8),c=ri(300,600);const minus=c-a*b>0;const ans=minus?c-a*b:c+a*b;
+     return Q(`${fmt(c)} ${minus?'−':'+'} ${a} × ${b} =`,ans,[minus?Math.abs((c-a)*b):(c+a)*b,c,a*b],fmt,
+       `Darab dahulu: ${a} × ${b} = ${fmt(a*b)}\n${fmt(c)} ${minus?'−':'+'} ${fmt(a*b)} = ${fmt(ans)}`);}},
+  ]
+ }},
+/* ================= BAB 2 ================= */
+{id:'b2',ico:'🍕',c1:'#FF6B81',c2:'#D6336C',name:'Pecahan, Perpuluhan dan Peratus',
+ desc:'Bahagi pecahan · darab & bahagi perpuluhan · penukaran peratus · nilai peratus kuantiti',
+ nota:[
+  {t:'Bahagi pecahan dengan nombor bulat',
+   body:'Membahagi pecahan dengan nombor bulat bermaksud <b>memotong kepada bahagian yang lebih kecil</b>.\nKaedah: <b>darab penyebut</b> dengan nombor pembahagi.\n<span class="eg">Contoh 1:\n4/5 ÷ 2 = 4/(5×2) = 4/10 = 2/5\nBayangkan kek yang tinggal 4/5 dikongsi 2 orang — setiap orang dapat 2/5.</span><span class="eg">Contoh 2:\n3/4 ÷ 3 = 3/12 = 1/4</span><span class="warn">⚠️ Awas: Selepas membahagi, sentiasa PERMUDAHKAN pecahan ke bentuk termudah. 3/12 belum siap — jawapan penuh ialah 1/4!</span>',
+   svg:svgPie(4,10),
+   q:Q('2/3 ÷ 2 =','1/3',['4/3','2/6 (belum termudah)','1/6'],x=>x,
+     '2/3 ÷ 2 = 2/(3×2) = 2/6\nPermudahkan: 2/6 = 1/3')},
+  {t:'Bahagi pecahan dengan pecahan',
+   body:'Rahsia besar: <b>SONGSANGKAN dan DARAB!</b>\na/b ÷ c/d = a/b × d/c\n<span class="eg">Contoh 1:\n1/2 ÷ 1/4 = 1/2 × 4/1 = 4/2 = 2\nMaksudnya: "Berapa banyak suku dalam setengah?" — 2 suku! 🍰</span><span class="eg">Contoh 2:\n2/3 ÷ 1/6 = 2/3 × 6/1 = 12/3 = 4</span><span class="warn">⚠️ Awas: Yang disongsangkan ialah pecahan KEDUA (pembahagi), bukan yang pertama! 1/2 ÷ 1/4 ≠ 2/1 × 1/4.</span>',
+   q:Q('3/4 ÷ 1/8 =','6',['3/32','8/3','4'],x=>x,
+     'Songsangkan dan darab:\n3/4 × 8/1 = 24/4 = 6')},
+  {t:'Darab perpuluhan',
+   body:'Kaedah darab perpuluhan:\n1️⃣ Darab seperti nombor bulat biasa (abaikan titik dulu)\n2️⃣ Kira jumlah tempat perpuluhan dalam soalan\n3️⃣ Letak semula titik pada jawapan\n<span class="eg">Contoh 1:\n2.4 × 3\n24 × 3 = 72 → satu tempat perpuluhan → 7.2</span><span class="eg">Contoh 2:\n0.06 × 7\n6 × 7 = 42 → dua tempat perpuluhan → 0.42</span><span class="warn">⚠️ Awas: Anggarkan dulu untuk semak! 2.4 × 3 patut hampir dengan 2 × 3 = 6, jadi 7.2 munasabah — 72 atau 0.72 jelas salah.</span>',
+   q:Q('3.6 × 4 =','14.4',['1.44','144','12.4'],x=>x,
+     '36 × 4 = 144\nSatu tempat perpuluhan ➜ 14.4\nSemak anggaran: hampir 4 × 4 = 16 ✓')},
+  {t:'Bahagi perpuluhan',
+   body:'Membahagi perpuluhan dengan nombor bulat: bahagi seperti biasa, dan pastikan <b>titik perpuluhan kekal sebaris</b> — titik jawapan tepat di atas titik soalan.\n<span class="eg">Contoh 1:\n8.4 ÷ 4 = 2.1</span><span class="eg">Contoh 2:\n7.2 ÷ 8 = 0.9\n(72 ÷ 8 = 9, titik kekal → 0.9)</span><span class="warn">⚠️ Awas: Jika nilai pertama lebih kecil daripada pembahagi, jawapan bermula dengan 0. — jangan lupa tulis sifar itu!</span>',
+   q:Q('9.6 ÷ 4 =','2.4',['24','0.24','2.6'],x=>x,
+     '96 ÷ 4 = 24\nTitik perpuluhan kekal sebaris ➜ 2.4')},
+  {t:'Perpuluhan ↔ Peratus',
+   body:'Peratus bermaksud <b>"daripada 100"</b>. Simbolnya %.\n<span class="eg">Perpuluhan ➜ peratus: DARAB 100\n0.45 = 45%\n0.07 = 7%\n1.2 = 120%</span><span class="eg">Peratus ➜ perpuluhan: BAHAGI 100\n65% = 0.65\n8% = 0.08</span><span class="warn">⚠️ Awas: 0.07 ialah 7%, BUKAN 70%! Gerakkan titik dua tempat, bukan satu.</span>\nKedai guna peratus setiap hari — "DISKAUN 30%!" 🏷️ Faham peratus = pandai berbelanja!',
+   q:Q('0.85 ditukar kepada peratus ialah','85%',['8.5%','0.85%','850%'],x=>x,
+     '0.85 × 100% = 85%')},
+  {t:'Nilai peratus & perubahan peratus',
+   body:'Cari peratus daripada kuantiti:\n<b>p% × kuantiti = (p ÷ 100) × kuantiti</b>\n<span class="eg">Contoh 1:\n30% daripada 200 murid = 30/100 × 200 = 60 murid\nCara pantas: 10% = 20, jadi 30% = 60 ⚡</span>\nKuantiti juga boleh BERTAMBAH atau BERKURANG mengikut peratus:\n<span class="eg">Contoh 2 (kenaikan):\nHarga RM80 naik 10% → kenaikan RM8 → harga baharu RM88</span><span class="eg">Contoh 3 (penurunan):\n240 penonton berkurang 25% → berkurang 60 → tinggal 180</span>',
+   q:Q('25% daripada 480 ialah','120',['105','140','240'],x=>x,
+     '25/100 × 480 = 120\nCara pantas: 25% = 1/4, dan 480 ÷ 4 = 120')},
+ ],
+ gens:{
+  1:[
+   {t:'Tukar perpuluhan-peratus',g:()=>{const l=pick([[0.25,'25%'],[0.5,'50%'],[0.75,'75%'],[0.4,'40%'],[0.6,'60%'],[0.35,'35%'],[0.08,'8%'],[0.9,'90%']]);
+     const v=l[0]*100;
+     const cands=[(v/10)+'%',(v*10)+'%',(100-v)+'%',(v+5)+'%',(v+15)+'%',(v-5)+'%'];
+     return Q(`Tukarkan ${l[0]} kepada peratus.`,l[1],cands,x=>x,
+       `${l[0]} × 100% = ${l[1]}`);}},
+   {t:'Pecahan drpd kuantiti',g:()=>{const b=pick([3,4,5,6,8]),a=ri(1,b-1),unit=ri(6,20),N=b*unit,ans=a*unit;
+     return Q(`${pick(NAMES)} ada ${N} biji guli. ${a}/${b} daripadanya berwarna merah, seperti bahagian berlorek pada rajah. Berapakah bilangan guli merah?`,
+       ans,[N-ans,unit,ans+unit],fmt,`${a}/${b} × ${N} = ${N} ÷ ${b} × ${a} = ${ans} biji`,svgPie(a,b));}},
+   {t:'Tambah perpuluhan',g:()=>{const a=ri(100,999)/100,b=ri(100,999)/100;const ans=+(a+b).toFixed(2);
+     return Q(`${a.toFixed(2)} + ${b.toFixed(2)} =`,ans,[+(ans+0.1).toFixed(2),+(ans-0.1).toFixed(2),+Math.abs(a-b).toFixed(2)],x=>x.toFixed(2),
+       `Susun titik perpuluhan secara lurus, kemudian tambah.\nJawapan: ${ans.toFixed(2)}`);}},
+  ],
+  2:[
+   {t:'Pecahan ÷ nombor bulat',g:()=>{const b=pick([2,3,4,5]),a=ri(1,b-1),n=pick([2,3,4]);const ans=frac(a,b*n);
+     const cands=[frac(a*n,b),frac(a,b),frac(Math.min(a+1,b*n-1),b*n),frac(a,b*n*2),frac(a,b*(n+1)),frac(Math.max(1,a-1)+b,b*n)];
+     return Q(`${a}/${b} ÷ ${n} =`,ans,cands,x=>x,
+       `${a}/${b} ÷ ${n} = ${a}/(${b}×${n}) = ${frac(a,b*n)}`);}},
+   {t:'Darab perpuluhan',g:()=>{const a=ri(11,89)/10,b=ri(3,9);const ans=+(a*b).toFixed(1);
+     return Q(`${a.toFixed(1)} × ${b} =`,ans,[+(a*b*10).toFixed(1),+(a+b).toFixed(1),+(ans+1).toFixed(1)],x=>x.toFixed(1),
+       `${a*10} × ${b} = ${a*10*b}\nSatu tempat perpuluhan ➜ ${ans.toFixed(1)}`);}},
+   {t:'Peratus drpd kuantiti',g:()=>{const p=pick([5,10,15,20,25,30,40,50,60,75]),base=ri(4,20)*20;const ans=base*p/100;
+     return Q(`${p}% daripada ${fmt(base)} ialah`,ans,[base-ans,base*p/10,ans+p],fmt,`${p}/100 × ${fmt(base)} = ${fmt(ans)}`);}},
+   {t:'Bahagi perpuluhan',g:()=>{const dd=pick([2,4,5]);const q10=ri(4,20)*dd;const a=q10/10;const ans=+(a/dd).toFixed(2);
+     return Q(`${a.toFixed(1)} ÷ ${dd} =`,ans,[+(a*10/dd).toFixed(1),+(a/dd/10).toFixed(3),+(ans+0.2).toFixed(2)],x=>String(+x),
+       `${a.toFixed(1)} ÷ ${dd} = ${+ans}\nTitik perpuluhan kekal sebaris.`);}},
+  ],
+  3:[
+   {t:'Pecahan ÷ pecahan',g:()=>{const d=pick([[1,2,1,4,'2'],[2,3,1,6,'4'],[3,4,1,8,'6'],[1,2,1,6,'3'],[3,5,1,10,'6'],[1,3,1,6,'2']]);
+     const cands=[frac(d[0],d[1]*d[3]),String(+d[4]+1),String(+d[4]+2),frac(d[0]*d[2],d[1]+d[3]),String(Math.max(1,+d[4]-1))];
+     return Q(`${d[0]}/${d[1]} ÷ ${d[2]}/${d[3]} =`,d[4],cands,x=>x,
+       `Songsangkan dan darab:\n${d[0]}/${d[1]} × ${d[3]}/${d[2]} = ${frac(d[0]*d[3],d[1]*d[2])}`);}},
+   {t:'Masalah pecahan & peratus',g:()=>{const N=pick([120,160,200,240,320]);const b=pick([[1,4],[3,8],[1,2],[3,4],[2,5]]);const pagi=N*b[0]/b[1];
+     const p=pick([25,50]);const baki=N-pagi;const petang=baki*p/100;const ans=baki-petang;
+     return Q(`Sebuah kedai ada ${N} biji telur. ${b[0]}/${b[1]} daripadanya dijual pada waktu pagi. ${p}% daripada baki dijual pada waktu petang. Berapakah bilangan telur yang belum dijual?`,
+       ans,[baki,petang,pagi],fmt,
+       `Pagi: ${b[0]}/${b[1]} × ${N} = ${pagi}\nBaki = ${N} − ${pagi} = ${baki}\nPetang: ${p}% × ${baki} = ${petang}\nBelum dijual = ${baki} − ${petang} = ${ans}`);}},
+   {t:'Perubahan peratus',g:()=>{const harga=ri(4,12)*10;const p=pick([10,20,30]);const naik=harga*p/100;const ans=harga+naik;
+     return Q(`Harga sehelai baju ialah ${rm(harga)}. Harganya dinaikkan sebanyak ${p}%. Berapakah harga baharu baju itu?`,
+       +ans.toFixed(2),[+naik.toFixed(2),+(harga-naik).toFixed(2),+(ans+5).toFixed(2)],rm,
+       `Kenaikan = ${p}% × ${rm(harga)} = ${rm(naik)}\nHarga baharu = ${rm(harga)} + ${rm(naik)} = ${rm(ans)}`);}},
+  ]
+ }},
+/* ================= BAB 3 ================= */
+{id:'b3',ico:'💰',c1:'#2ECC71',c2:'#148F4B',name:'Wang hingga RM10 Juta',
+ desc:'Untung & rugi · diskaun, rebat, baucar · bil, invois & cukai · faedah & dividen · aset, liabiliti, insurans & takaful',
+ nota:[
+  {t:'Untung atau rugi?',
+   body:'Peniaga membeli barang pada <b>harga kos</b> dan menjualnya pada <b>harga jual</b>.\n💚 Harga jual LEBIH TINGGI daripada kos → <b>UNTUNG</b>\nUntung = Harga jual − Harga kos\n❤️ Harga jual LEBIH RENDAH daripada kos → <b>RUGI</b>\nRugi = Harga kos − Harga jual\n<span class="eg">Contoh 1:\nBeli rak RM120, jual RM155.\nUntung = 155 − 120 = RM35 💚</span><span class="eg">Contoh 2:\nBeli kipas RM90, jual RM75.\nRugi = 90 − 75 = RM15 ❤️</span><span class="warn">⚠️ Awas: Baca soalan betul-betul — yang ditanya untung/rugi (beza) atau harga jual (jumlah)? Ini silap paling kerap dalam peperiksaan!</span>',
+   q:Q('Encik Faizal membeli sebuah rak dengan harga RM120 dan menjualnya dengan harga RM155. Berapakah untungnya?',
+     'RM35.00',['RM275.00','RM120.00','RM25.00'],x=>x,
+     'Untung = Harga jual − Harga kos\n= RM155 − RM120 = RM35')},
+  {t:'Diskaun, rebat & baucar',
+   body:'Tiga cara harga boleh dikurangkan:\n🏷️ <b>Diskaun</b> — potongan harga semasa jualan murah, biasanya dalam % daripada harga asal\n💵 <b>Rebat</b> — sebahagian wang dikembalikan selepas pembelian\n🎟️ <b>Baucar</b> — kupon bernilai tetap (contoh RM10), ditolak terus daripada harga\n<span class="eg">Contoh 1 (diskaun %):\nJam RM200, diskaun 15%.\nDiskaun = 15/100 × 200 = RM30\nBayar = 200 − 30 = RM170</span><span class="eg">Contoh 2 (baucar):\nBeg RM80 dengan baucar RM15.\nBayar = 80 − 15 = RM65</span><span class="warn">⚠️ Awas: Diskaun 15% BUKAN bayar RM15! Peratus mesti dikira daripada harga asal dahulu.</span>',
+   q:Q('Harga sebuah kasut ialah RM120. Diskaun 25% diberikan. Berapakah harga selepas diskaun?',
+     'RM90.00',['RM30.00','RM95.00','RM100.00'],x=>x,
+     'Diskaun = 25% × RM120 = RM30\nHarga baharu = RM120 − RM30 = RM90')},
+  {t:'Bil, invois, resit & cukai',
+   body:'Kenali dokumen jual beli:\n🧾 <b>Invois / Bil</b> — senarai barang & jumlah yang PERLU dibayar (sebelum bayar)\n🧾 <b>Resit</b> — bukti pembayaran TELAH dibuat (selepas bayar)\n<b>Cukai perkhidmatan</b> dikenakan di sesetengah restoran — peratus tertentu DITAMBAH pada jumlah bil.\n<span class="eg">Contoh:\nMakanan RM50, cukai perkhidmatan 6%.\nCukai = 6/100 × 50 = RM3\nJumlah bil = 50 + 3 = RM53</span><span class="warn">⚠️ Awas: Diskaun DITOLAK, tetapi cukai DITAMBAH! Jangan terbalik.</span>',
+   q:Q('Jumlah makanan di sebuah restoran ialah RM50. Cukai perkhidmatan 6% dikenakan. Berapakah jumlah bil?',
+     'RM53.00',['RM56.00','RM50.60','RM47.00'],x=>x,
+     'Cukai = 6% × RM50 = RM3\nJumlah bil = RM50 + RM3 = RM53')},
+  {t:'Faedah & dividen',
+   body:'Wang yang disimpan atau dilaburkan boleh "membiak"! 🌱\n🏦 <b>Faedah</b> — bayaran tambahan daripada bank kerana kamu menyimpan wang di sana.\n<b>Faedah setahun = kadar % × jumlah simpanan</b>\n📈 <b>Dividen</b> — pulangan keuntungan daripada pelaburan.\n<span class="eg">Contoh 1:\nSimpanan RM1 000, faedah 3% setahun.\nFaedah = 3/100 × 1 000 = RM30</span><span class="eg">Contoh 2:\nSimpanan RM2 000, faedah 4% setahun, selama 2 tahun.\nSetahun = RM80 → 2 tahun = RM160</span><span class="warn">⚠️ Awas: Faedah ialah wang TAMBAHAN. Jumlah dalam bank = simpanan asal + faedah.</span>',
+   q:Q('Puan Devi menyimpan RM2 000 di bank dengan faedah 4% setahun. Berapakah faedah yang diterimanya selepas setahun?',
+     'RM80.00',['RM8.00','RM800.00','RM40.00'],x=>x,
+     'Faedah = 4% × RM2 000\n= 4/100 × 2 000 = RM80')},
+  {t:'Aset & liabiliti',
+   body:'Dua istilah penting kewangan pintar: 🧠\n💎 <b>Aset</b> — harta yang KAMU MILIKI dan bernilai.\n<span class="eg">Contoh aset: rumah, wang simpanan, kereta, tanah, barang kemas</span>\n📉 <b>Liabiliti</b> — hutang atau tanggungan yang PERLU DIBAYAR.\n<span class="eg">Contoh liabiliti: pinjaman kereta, pinjaman rumah, hutang kad kredit</span><span class="warn">⚠️ Awas: Kereta yang masih berhutang? Keretanya aset, bakinya pinjaman liabiliti. Orang bijak kewangan menambah aset dan mengurangkan liabiliti!</span>',
+   q:Q('Yang manakah contoh ASET?','Rumah yang dimiliki',['Pinjaman kereta','Hutang kad kredit','Bil elektrik tertunggak'],x=>x,
+     'Aset ialah harta yang dimiliki dan bernilai.\nPinjaman dan hutang ialah liabiliti.')},
+  {t:'Insurans & takaful',
+   body:'🛡️ <b>Insurans</b> dan <b>takaful</b> ialah PERLINDUNGAN KEWANGAN.\nKonsepnya: bayar sedikit secara tetap (dinamakan <b>premium</b> atau <b>caruman</b>), dan jika berlaku musibah — kemalangan, kebakaran, sakit — kamu menerima <b>pampasan</b> wang.\n<span class="eg">Contoh:\nEncik Rahman membayar caruman takaful RM50 sebulan.\nSetahun = RM50 × 12 = RM600.\nJika keretanya rosak akibat kemalangan, syarikat takaful membayar kos pembaikan.</span>\nBeza utama: <b>takaful</b> berlandaskan prinsip Islam (tolong-menolong sesama peserta), manakala insurans konvensional berasaskan kontrak jual beli perlindungan.',
+   q:Q('Puan Salmah membayar caruman takaful RM45 sebulan. Berapakah jumlah carumannya setahun?',
+     'RM540.00',['RM450.00','RM45.00','RM520.00'],x=>x,
+     'Setahun = 12 bulan\nRM45 × 12 = RM540')},
+ ],
+ gens:{
+  1:[
+   {t:'Baki wang',g:()=>{const nm=pick(HONOR),k1=ri(2,4),p1=ri(4,12)+pick([0,.5]),total=k1*p1,pay=Math.ceil(total/10)*10+pick([0,10]);
+     const ans=+(pay-total).toFixed(2);
+     return Q(`${nm} membeli ${k1} kotak kuih dengan harga ${rm(p1)} sekotak. Dia membayar ${rm(pay)}. Berapakah bakinya?`,
+       ans,[+total.toFixed(2),+(ans+1).toFixed(2),+Math.abs(ans-1).toFixed(2)],rm,
+       `Jumlah = ${k1} × ${rm(p1)} = ${rm(total)}\nBaki = ${rm(pay)} − ${rm(total)} = ${rm(ans)}`);}},
+   {t:'Simpanan',g:()=>{const m=pick([25,30,35,40,45,50]),bulan=ri(4,9),ans=m*bulan;
+     return Q(`${pick(NAMES)} menyimpan ${rm(m)} setiap bulan selama ${bulan} bulan. Hitung jumlah simpanannya.`,
+       ans,[m*(bulan+1),m*(bulan-1),ans+m/5],rm,`${rm(m)} × ${bulan} = ${rm(ans)}`);}},
+   {t:'Baucar',g:()=>{const h=ri(5,15)*10,v=pick([5,10,15,20]);const ans=h-v;
+     return Q(`Harga sebuah buku ialah ${rm(h)}. ${pick(NAMES)} menggunakan baucar ${rm(v)}. Berapakah yang perlu dibayar?`,
+       ans,[h+v,v,ans-5],rm,`Bayaran = ${rm(h)} − ${rm(v)} = ${rm(ans)}`);}},
+  ],
+  2:[
+   {t:'Untung',g:()=>{const kos=ri(8,40)*10,unt=ri(2,15)*5;const jual=kos+unt;
+     return Q(`${pick(HONOR)} membeli sebuah kabinet dengan harga ${rm(kos)} dan menjualnya dengan harga ${rm(jual)}. Hitung untungnya.`,
+       unt,[jual+kos,kos,unt+10],rm,`Untung = Harga jual − Harga kos\n= ${rm(jual)} − ${rm(kos)} = ${rm(unt)}`);}},
+   {t:'Rugi',g:()=>{const kos=ri(10,40)*10,r=ri(2,10)*5;const jual=kos-r;
+     return Q(`Sebuah kedai membeli sebuah kipas dengan harga ${rm(kos)} dan terpaksa menjualnya dengan harga ${rm(jual)}. Hitung ruginya.`,
+       r,[jual,kos+jual,r+10],rm,`Rugi = Harga kos − Harga jual\n= ${rm(kos)} − ${rm(jual)} = ${rm(r)}`);}},
+   {t:'Diskaun',g:()=>{const price=ri(6,60)*10,p=pick([10,15,20,25,30]);const disc=price*p/100,ans=price-disc;
+     return Q(`Harga sebuah jam tangan ialah ${rm(price)}. Diskaun ${p}% diberikan. Hitung harga selepas diskaun.`,
+       ans,[disc,price+disc,ans-10],rm,`Diskaun = ${p}% × ${rm(price)} = ${rm(disc)}\nHarga baharu = ${rm(price)} − ${rm(disc)} = ${rm(ans)}`);}},
+  ],
+  3:[
+   {t:'Faedah bank',g:()=>{const s=pick([1000,1500,2000,2500,3000,5000]),p=pick([2,3,4,5]);const ans=s*p/100;
+     return Q(`${pick(HONOR)} menyimpan ${rm(s)} di bank dengan kadar faedah ${p}% setahun. Berapakah faedah selepas setahun?`,
+       ans,[ans*10,ans/2,s-ans],rm,`Faedah = ${p}% × ${rm(s)} = ${rm(ans)}`);}},
+   {t:'Harga jual + untung %',g:()=>{const kos=ri(10,50)*10,p=pick([10,20,25,30]);const unt=kos*p/100,ans=kos+unt;
+     return Q(`Sebuah kedai membeli basikal dengan harga ${rm(kos)} dan mahu untung ${p}%. Berapakah harga jualnya?`,
+       ans,[unt,kos-unt,ans+10],rm,`Untung = ${p}% × ${rm(kos)} = ${rm(unt)}\nHarga jual = ${rm(kos)} + ${rm(unt)} = ${rm(ans)}`);}},
+   {t:'Bil + cukai',g:()=>{const mkn=ri(4,12)*10;const c=6;const cukai=mkn*c/100;const ans=mkn+cukai;
+     return Q(`Jumlah harga makanan di sebuah restoran ialah ${rm(mkn)}. Cukai perkhidmatan ${c}% dikenakan. Hitung jumlah bil yang perlu dibayar.`,
+       +ans.toFixed(2),[+cukai.toFixed(2),+(mkn-cukai).toFixed(2),+(ans+2).toFixed(2)],rm,
+       `Cukai = ${c}% × ${rm(mkn)} = ${rm(cukai)}\nJumlah bil = ${rm(mkn)} + ${rm(cukai)} = ${rm(ans)}`);}},
+  ]
+ }},
+/* ================= BAB 4 ================= */
+{id:'b4',ico:'🌏',c1:'#00A2FF',c2:'#0062B8',name:'Masa dan Waktu',
+ desc:'Zon masa dunia · kira waktu di negara lain · tempoh masa · masalah harian melibatkan masa',
+ nota:[
+  {t:'Kenapa waktu dunia berbeza?',
+   body:'Bumi berputar pada paksinya! 🌍 Semasa Malaysia siang, sebelah bumi yang satu lagi malam.\nDunia dibahagikan kepada <b>zon masa</b>. Titik rujukannya ialah <b>GMT</b> (Waktu Min Greenwich) di London, England.\n<span class="eg">Malaysia = GMT+8\nErtinya waktu Malaysia 8 jam LEBIH AWAL daripada London.\nLondon jam 12:00 tengah hari → Malaysia jam 20:00 malam.</span><span class="eg">Contoh zon masa lain:\nJeddah GMT+3 · New Delhi GMT+5 · Tokyo GMT+9 · Sydney GMT+10</span><span class="warn">⚠️ Awas: "+8" bukan bermakna lambat — nombor zon LEBIH BESAR bermaksud waktu LEBIH AWAL (matahari terbit dulu di timur!).</span>',
+   q:Q('Malaysia berada di zon masa','GMT+8',['GMT−8','GMT+3','GMT 0'],x=>x,
+     'Waktu Malaysia ialah GMT+8 — lapan jam lebih awal daripada Waktu Min Greenwich di London.')},
+  {t:'Kira waktu di negara lain',
+   body:'Langkah mengira waktu di bandar lain:\n1️⃣ Cari <b>beza zon</b>: zon bandar itu − zon Malaysia (+8)\n2️⃣ Beza positif → TAMBAH. Beza negatif → TOLAK.\n<span class="eg">Contoh 1:\nDi Malaysia jam 1500. Waktu di Jeddah (GMT+3)?\nBeza = 3 − 8 = −5 → tolak 5 jam\n1500 − 5 jam = jam 1000 🕌</span><span class="eg">Contoh 2:\nDi Malaysia jam 1400. Waktu di Tokyo (GMT+9)?\nBeza = 9 − 8 = +1 → tambah 1 jam\n1400 + 1 = jam 1500 🗼</span><span class="warn">⚠️ Awas: Jika jawapan melebihi 2400 atau kurang daripada 0000, harinya berubah! 2300 + 3 jam = 0200 hari berikutnya.</span>',
+   q:Q('Di Malaysia (GMT+8) jam 1600. Pukul berapakah di New Delhi (GMT+5)?','jam 1300',['jam 1900','jam 1100','jam 2100'],x=>x,
+     'Beza = 5 − 8 = −3 → tolak 3 jam\n1600 − 3 jam = jam 1300')},
+  {t:'Tempoh masa',
+   body:'Tempoh = berapa lama sesuatu peristiwa berlaku, dari mula hingga tamat.\nKaedah terbaik: <b>"lompat jam"</b> ⏰\n<span class="eg">Contoh: Dari jam 0745 hingga jam 1030\n0745 → 0800 : 15 minit\n0800 → 1000 : 2 jam\n1000 → 1030 : 30 minit\nJumlah = 2 jam 45 minit</span><span class="warn">⚠️ Awas: JANGAN tolak macam nombor biasa!\n1030 − 0745 ≠ 285. Ingat: 1 jam = 60 minit, bukan 100!</span>\nPenukaran penting:\n1 jam = 60 minit · 1 minit = 60 saat · 1 hari = 24 jam',
+   q:Q('Sebuah feri bertolak jam 0930 dan tiba jam 1215. Berapakah tempoh perjalanannya?','2 jam 45 minit',['2 jam 85 minit','3 jam 15 minit','2 jam 15 minit'],x=>x,
+     '0930 → 1200 = 2 jam 30 minit\n1200 → 1215 = 15 minit\nJumlah = 2 jam 45 minit')},
+  {t:'Masalah masa 2 langkah',
+   body:'Soalan KBAT masa selalunya gabungkan tempoh + zon masa, atau tempoh yang melepasi tengah malam.\n<span class="eg">Contoh 1 (melepasi tengah malam):\nPesawat berlepas jam 2230, penerbangan 4 jam.\n2230 + 4 jam = 0230 hari berikutnya ✈️</span><span class="eg">Contoh 2 (tempoh dengan rehat):\nBas bertolak 0800, tiba 1130, termasuk rehat 20 minit.\nTempoh keseluruhan = 3 jam 30 minit\nTempoh bergerak = 3 jam 30 minit − 20 minit = 3 jam 10 minit</span><span class="warn">⚠️ Awas: Baca soalan teliti — "tempoh perjalanan" dan "tempoh bergerak" boleh berbeza jika ada rehat!</span>',
+   q:Q('Sebuah bas bertolak jam 0815 dan tiba jam 1145. Perjalanan termasuk rehat 30 minit. Berapakah tempoh bas itu bergerak?','3 jam',['3 jam 30 minit','2 jam 30 minit','4 jam'],x=>x,
+     'Tempoh keseluruhan: 0815 → 1145 = 3 jam 30 minit\nTolak rehat: 3 jam 30 minit − 30 minit = 3 jam')},
+ ],
+ gens:{
+  1:[
+   {t:'Tukar unit masa',g:()=>{const h=ri(2,6),m=pick([10,15,20,30,40,45]);const ans=h*60+m;
+     return Q(`Tukarkan ${h} jam ${m} minit kepada minit.`,ans,[h*60-m,h*100+m,ans+60],x=>fmt(x)+' minit',
+       `${h} jam = ${h} × 60 = ${h*60} minit\n${h*60} + ${m} = ${ans} minit`);}},
+   {t:'Tempoh mudah',g:()=>{const h1=ri(7,12);const dh=ri(1,4);
+     return Q(`Kelas bermula pada jam ${pad(h1)}00 dan tamat pada jam ${pad(h1+dh)}00. Berapakah tempohnya?`,
+       dh+' jam',[(dh+1)+' jam',(dh-1===0?dh+2:dh-1)+' jam',dh+' jam 30 minit'],x=>x,
+       `${pad(h1)}00 → ${pad(h1+dh)}00 = ${dh} jam`);}},
+  ],
+  2:[
+   {t:'Tempoh masa',g:()=>{const h1=ri(6,14),m1=pick([0,15,30,45]),dh=ri(1,4),dm=pick([15,20,25,30,45]);
+     let h2=h1+dh,m2=m1+dm;if(m2>=60){m2-=60;h2++;}
+     const dur=(h2*60+m2)-(h1*60+m1),dH=Math.floor(dur/60),dM=dur%60;
+     return Q(`Sebuah bas bertolak pada jam ${pad(h1)}${pad(m1)} dan tiba pada jam ${pad(h2)}${pad(m2)}. Berapakah tempoh perjalanan itu?`,
+       `${dH} jam ${dM} minit`,[`${dH} jam ${Math.abs(dM-10)} minit`,`${dH+1} jam ${dM} minit`,`${dH} jam ${(dM+10)%60} minit`],x=>x,
+       `Jam ${pad(h1)}${pad(m1)} → jam ${pad(h2)}${pad(m2)}\nTempoh = ${dH} jam ${dM} minit`);}},
+   {t:'Masa tamat',g:()=>{const h1=ri(7,18),m1=pick([0,10,15,30,45]),dh=ri(1,3),dm=pick([15,25,30,35,45]);
+     let h2=h1+dh,m2=m1+dm;if(m2>=60){m2-=60;h2++;}
+     return Q(`Muka jam menunjukkan waktu suatu majlis bermula, iaitu jam ${pad(h1)}${pad(m1)}. Majlis itu berlangsung selama ${dh} jam ${dm} minit. Pada pukul berapakah majlis itu tamat?`,
+       `jam ${pad(h2)}${pad(m2)}`,[`jam ${pad(h2)}${pad((m2+10)%60)}`,`jam ${pad(h2+1)}${pad(m2)}`,`jam ${pad(h2-1)}${pad(m2)}`],x=>x,
+       `Jam ${pad(h1)}${pad(m1)} + ${dh} jam ${dm} minit = jam ${pad(h2)}${pad(m2)}`,svgClock(h1,m1));}},
+  ],
+  3:[
+   {t:'Zon masa',g:()=>{const cities=[['London',0],['Jeddah',3],['New Delhi',5],['Tokyo',9],['Sydney',10],['Seoul',9],['Dubai',4]];
+     const c=pick(cities);const h=ri(9,20);const diff=c[1]-8;let h2=(h+diff+24)%24;
+     return Q(`Waktu di Malaysia (GMT+8) ialah jam ${pad(h)}00. Pukul berapakah waktu di ${c[0]} (GMT${c[1]>=0?'+':''}${c[1]})?`,
+       `jam ${pad(h2)}00`,[`jam ${pad((h2+2)%24)}00`,`jam ${pad((h2+22)%24)}00`,`jam ${pad((h2+12)%24)}00`],x=>x,
+       `Beza zon = ${c[1]} − 8 = ${diff} jam\n${pad(h)}00 ${diff>=0?'+':'−'} ${Math.abs(diff)} jam = jam ${pad(h2)}00`);}},
+   {t:'Melepasi tengah malam',g:()=>{const h1=ri(19,22),m1=pick([0,30]);const dh=ri(3,6),dm=pick([0,30]);
+     let tot=h1*60+m1+dh*60+dm;const h2=Math.floor(tot/60)%24,m2=tot%60;
+     return Q(`Sebuah pesawat berlepas pada jam ${pad(h1)}${pad(m1)} dan penerbangannya mengambil masa ${dh} jam${dm?' '+dm+' minit':''}. Pada pukul berapakah pesawat itu mendarat (hari berikutnya)?`,
+       `jam ${pad(h2)}${pad(m2)}`,[`jam ${pad((h2+1)%24)}${pad(m2)}`,`jam ${pad((h2+23)%24)}${pad(m2)}`,`jam ${pad(h2)}${pad((m2+30)%60)}`],x=>x,
+       `${pad(h1)}${pad(m1)} + ${dh} jam ${dm} minit\nMelepasi tengah malam → jam ${pad(h2)}${pad(m2)} hari berikutnya`);}},
+  ]
+ }},
+/* ================= BAB 5 ================= */
+{id:'b5',ico:'📏',c1:'#A55EEA',c2:'#6C2BB8',name:'Ukuran dan Sukatan',
+ desc:'Panjang · jisim · isi padu cecair · penukaran unit · masalah harian 2 langkah',
+ nota:[
+  {t:'Tangga unit',
+   body:'Hafal tangga penukaran ini — ia digunakan di mana-mana! 🪜\n<span class="eg">Panjang: 1 km = 1 000 m · 1 m = 100 cm · 1 cm = 10 mm\nJisim: 1 kg = 1 000 g\nIsi padu cecair: 1 ℓ = 1 000 mℓ</span>\nPeraturan emas:\n⬇️ Unit BESAR → kecil: <b>DARAB</b>\n⬆️ Unit KECIL → besar: <b>BAHAGI</b>\n<span class="eg">Contoh 1: 2.5 km = 2.5 × 1 000 = 2 500 m\nContoh 2: 4 500 g = 4 500 ÷ 1 000 = 4.5 kg</span><span class="warn">⚠️ Awas: m → cm darab 100, BUKAN 1 000! Panjang ada dua anak tangga berbeza.</span>',
+   q:Q('3.2 kg sama dengan','3 200 g',['320 g','32 g','32 000 g'],x=>x,
+     '1 kg = 1 000 g\n3.2 × 1 000 = 3 200 g')},
+  {t:'Operasi dengan unit',
+   body:'Tambah, tolak, darab dan bahagi ukuran — sama macam nombor biasa, TETAPI <b>unitnya mesti sama dahulu!</b>\n<span class="eg">Contoh 1:\n2.4 kg + 750 g = ?\nSamakan unit: 2.4 kg = 2 400 g\n2 400 + 750 = 3 150 g (atau 3.15 kg)</span><span class="eg">Contoh 2:\n5 bungkus tepung × 450 g = 2 250 g = 2.25 kg</span><span class="warn">⚠️ Awas: Perhatikan unit yang DIMINTA dalam soalan. Jika soalan minta jawapan dalam kg tetapi kamu jawab dalam g — markah hilang walaupun kiraan betul!</span>',
+   q:Q('1.8 m + 65 cm = ? (dalam cm)','245 cm',['66.8 cm','230 cm','2 450 cm'],x=>x,
+     'Samakan unit: 1.8 m = 180 cm\n180 + 65 = 245 cm')},
+  {t:'Masalah harian 2 langkah',
+   body:'Soalan peperiksaan sebenar selalunya perlukan <b>2 langkah atau lebih</b>. Strategi 3B:\n1️⃣ <b>Baca</b> — apa yang diberi, apa yang ditanya?\n2️⃣ <b>Bina</b> — samakan unit, rancang langkah\n3️⃣ <b>Buat</b> — selesaikan langkah demi langkah\n<span class="eg">Contoh:\nAina ada 2 m reben. Dia memotong 3 keping, setiap satu 40 cm. Baki?\nLangkah 1: 2 m = 200 cm\nLangkah 2: guna 3 × 40 = 120 cm\nLangkah 3: baki = 200 − 120 = 80 cm ✂️</span><span class="warn">⚠️ Awas: Soalan bahagi bekas — jika ada baki, fikir sama ada perlu bekas TAMBAHAN. 1 300 g diisi dalam bekas 500 g → 2 bekas penuh + baki → perlu 3 bekas!</span>',
+   q:Q('Sebotol air mengandungi 1.5 ℓ. Haziq menuang keluar 600 mℓ. Berapakah baki air, dalam mℓ?','900 mℓ',['0.9 mℓ','1 100 mℓ','850 mℓ'],x=>x,
+     '1.5 ℓ = 1 500 mℓ\nBaki = 1 500 − 600 = 900 mℓ')},
+ ],
+ gens:{
+  1:[
+   {t:'Penukaran unit',g:()=>{const k=pick([['km','m',1000],['m','cm',100],['kg','g',1000],['ℓ','mℓ',1000]]);const v=ri(12,89)/10;const ans=v*k[2];
+     return Q(`Tukarkan ${v} ${k[0]} kepada ${k[1]}.`,ans,[v*k[2]/10,v*k[2]*10,ans+k[2]/10],x=>fmt(x)+' '+k[1],
+       `1 ${k[0]} = ${fmt(k[2])} ${k[1]}\n${v} × ${fmt(k[2])} = ${fmt(ans)} ${k[1]}`);}},
+   {t:'Tambah jisim',g:()=>{const a=ri(15,45)/10,b=ri(5,20)/10;const ans=+(a+b).toFixed(1);
+     return Q(`${pick(HONOR)} membeli ${a.toFixed(1)} kg ikan dan ${b.toFixed(1)} kg udang. Hitung jumlah jisim barang itu.`,
+       ans,[+Math.abs(a-b).toFixed(1),+(ans+0.5).toFixed(1),+(ans-0.5).toFixed(1)],x=>x.toFixed(1)+' kg',
+       `${a.toFixed(1)} + ${b.toFixed(1)} = ${ans.toFixed(1)} kg`);}},
+  ],
+  2:[
+   {t:'Baki isi padu',g:()=>{const L=pick([1,1.5,2,2.5]);const guna=ri(3,9)*100;const ans=L*1000-guna;
+     return Q(`Sebuah tangki mengandungi ${L} ℓ air. Sebanyak ${guna} mℓ digunakan. Berapakah baki air, dalam mℓ?`,
+       ans,[L*1000+guna,ans/10,ans+100],x=>fmt(x)+' mℓ',
+       `${L} ℓ = ${fmt(L*1000)} mℓ\nBaki = ${fmt(L*1000)} − ${fmt(guna)} = ${fmt(ans)} mℓ`);}},
+   {t:'Darab jisim',g:()=>{const p=ri(2,6),g2=ri(150,450);const ans=p*g2;
+     return Q(`Sebungkus tepung berjisim ${g2} g. Hitung jumlah jisim ${p} bungkus tepung itu, dalam g.`,
+       ans,[ans+g2,ans-g2,g2],x=>fmt(x)+' g',`${p} × ${g2} = ${fmt(ans)} g`);}},
+  ],
+  3:[
+   {t:'Masalah 2 langkah (panjang)',g:()=>{const m=pick([2,3]);const k=ri(3,6),cm=pick([25,30,40,45]);const guna=k*cm;const ans=m*100-guna;
+     if(ans<=0)return BABS[4].gens[3][0].g();
+     return Q(`${pick(NAMES)} ada ${m} m reben. Dia memotong ${k} keping reben, setiap satu ${cm} cm. Berapakah baki reben, dalam cm?`,
+       ans,[guna,m*100,ans+cm],x=>fmt(x)+' cm',
+       `${m} m = ${m*100} cm\nDigunakan: ${k} × ${cm} = ${guna} cm\nBaki = ${m*100} − ${guna} = ${ans} cm`);}},
+   {t:'Masalah 2 langkah (jisim)',g:()=>{const jum=pick([5,6,8,10]);const guna=pick([1,1.5,2]);const bkg=pick([250,500]);const ans=(jum-guna)*1000/bkg;
+     return Q(`${pick(HONOR)} membeli ${jum} kg gula. Sebanyak ${guna} kg digunakan. Bakinya diisi ke dalam beberapa bekas, setiap bekas ${bkg} g. Berapakah bilangan bekas yang diperlukan?`,
+       ans,[ans+1,Math.max(1,ans-1),(jum*1000)/bkg],x=>fmt(x)+' bekas',
+       `Baki = ${jum} − ${guna} = ${jum-guna} kg = ${fmt((jum-guna)*1000)} g\n${fmt((jum-guna)*1000)} ÷ ${bkg} = ${ans} bekas`);}},
+  ]
+ }},
+/* ================= BAB 6 ================= */
+{id:'b6',ico:'📐',c1:'#FFC048',c2:'#D98E0B',name:'Ruang',
+ desc:'Sudut · poligon sekata · bulatan · perimeter, luas & isi padu',
+ nota:[
+  {t:'Jenis-jenis sudut',
+   body:'Sudut terbentuk apabila dua garis lurus bertemu pada satu titik (bucu). 📐\n<span class="eg">Jenis sudut:\n• Sudut TIRUS — kurang daripada 90° (runcing, macam muncung buaya kecil)\n• Sudut TEGAK — tepat 90° (macam penjuru buku)\n• Sudut CAKAH — antara 90° dan 180° (terbuka luas)</span><span class="eg">Contoh:\n45° → tirus · 90° → tegak · 125° → cakah</span><span class="warn">⚠️ Awas: 90° BUKAN tirus dan BUKAN cakah — ia ada nama khasnya sendiri: sudut tegak. Perhatikan simbol petak kecil ∟ pada rajah, itu tanda sudut tegak!</span>',
+   svg:svgAngle(50),
+   q:Q('Sudut 125° ialah sudut','cakah',['tirus','tegak','refleks'],x=>x,
+     'Sudut cakah berada antara 90° dan 180°.\n125° lebih besar daripada 90° tetapi kurang daripada 180°.')},
+  {t:'Mengukur sudut dengan protraktor',
+   body:'Protraktor ialah alat pengukur sudut berbentuk separuh bulatan (0° hingga 180°).\nLangkah mengukur:\n1️⃣ Letakkan <b>titik tengah</b> protraktor tepat pada bucu sudut\n2️⃣ Pastikan garis dasar protraktor selari dengan satu lengan sudut\n3️⃣ Baca skala dari <b>0°</b> mengikut lengan kedua\n<span class="warn">⚠️ Awas: Protraktor ada DUA skala (dalam dan luar)! Mulakan bacaan dari skala yang bermula dengan 0° pada lengan sudut. Anggarkan dulu — kalau sudut nampak tirus, jawapan mesti kurang 90°.</span>',
+   q:Q('Semasa mengukur sudut, titik tengah protraktor mesti diletakkan pada','bucu sudut',['hujung lengan sudut','tengah lengan sudut','mana-mana kedudukan'],x=>x,
+     'Titik tengah protraktor mesti tepat di atas bucu (titik pertemuan dua lengan) sudut itu.')},
+  {t:'Poligon sekata',
+   body:'Poligon sekata = bentuk tertutup yang <b>semua sisinya sama panjang</b> dan <b>semua sudutnya sama besar</b>.\n<span class="eg">Keluarga poligon sekata:\n⬠ Pentagon — 5 sisi, 5 bucu\n⬡ Heksagon — 6 sisi, 6 bucu (macam sarang lebah! 🐝)\nHeptagon — 7 sisi, 7 bucu\nOktagon — 8 sisi, 8 bucu (papan tanda BERHENTI 🛑)</span><span class="eg">Perimeter poligon sekata = bilangan sisi × panjang satu sisi\nContoh: heksagon sekata bersisi 7 cm → perimeter = 6 × 7 = 42 cm</span><span class="warn">⚠️ Awas: Bilangan sisi = bilangan bucu sentiasa! Pentagon ada 5 sisi DAN 5 bucu.</span>',
+   svg:svgPolygon(6,'Heksagon'),
+   q:Q('Berapakah bilangan sisi sebuah oktagon sekata?','8',['6','7','5'],x=>x,
+     'Okta bermaksud lapan.\nOktagon mempunyai 8 sisi — seperti papan tanda berhenti.')},
+  {t:'Bulatan: pusat, jejari, diameter',
+   body:'Kenali anatomi bulatan: ⭕\n• <b>Pusat</b> — titik tepat di tengah bulatan\n• <b>Jejari (j)</b> — jarak dari pusat ke tepi bulatan\n• <b>Diameter (d)</b> — garis dari tepi ke tepi MELALUI pusat\n<span class="eg">Rumus emas:\nd = 2 × j    dan    j = d ÷ 2\nContoh 1: jejari 5 cm → diameter = 10 cm\nContoh 2: diameter 18 cm → jejari = 9 cm</span><span class="warn">⚠️ Awas: Garis dari tepi ke tepi yang TIDAK melalui pusat bukan diameter (ia dipanggil perentas). Diameter ialah perentas yang PALING panjang.</span>',
+   svg:svgCircle(5,true),
+   q:Q('Jejari sebuah bulatan ialah 7 cm. Berapakah diameternya?','14 cm',['7 cm','3.5 cm','21 cm'],x=>x,
+     'Diameter = 2 × jejari\n= 2 × 7 = 14 cm')},
+  {t:'Perimeter dan luas',
+   body:'<b>Perimeter</b> = jumlah ukuran KELILING bentuk (unit: cm, m)\n<b>Luas</b> = keluasan PERMUKAAN bentuk (unit: cm², m²)\n<span class="eg">Rumus perimeter:\nSegi empat tepat = 2 × (panjang + lebar)\nSegi empat sama = 4 × sisi</span><span class="eg">Rumus luas:\nSegi empat tepat = panjang × lebar\nSegi empat sama = sisi × sisi\nSegi tiga = ½ × tapak × tinggi</span><span class="warn">⚠️ Awas: Untuk luas segi tiga, "tinggi" ialah garis TEGAK dari puncak ke tapak (garis putus-putus merah dalam rajah) — bukan sisi condong!</span>',
+   svg:svgTriangle(12,8),
+   q:Q('Luas segi tiga dalam rajah (tapak 12 cm, tinggi 8 cm) ialah','48 cm²',['96 cm²','20 cm²','40 cm²'],x=>x,
+     'Luas = ½ × tapak × tinggi\n= ½ × 12 × 8 = 48 cm²')},
+  {t:'Isi padu',
+   body:'<b>Isi padu</b> = ruang yang diisi oleh bentuk 3 dimensi (unit: cm³, m³) 📦\n<span class="eg">Rumus isi padu:\nKuboid = panjang × lebar × tinggi\nKubus = sisi × sisi × sisi</span><span class="eg">Contoh 1:\nKotak 8 cm × 5 cm × 4 cm\nIsi padu = 8 × 5 × 4 = 160 cm³</span><span class="eg">Contoh 2 (songsang — KBAT!):\nIsi padu kuboid 240 cm³, panjang 10 cm, lebar 6 cm. Tinggi?\nTinggi = 240 ÷ (10 × 6) = 240 ÷ 60 = 4 cm</span><span class="warn">⚠️ Awas unit: perimeter → cm, luas → cm², isi padu → cm³. Tersilap unit = markah ditolak!</span>',
+   svg:svgCuboid(8,5,4),
+   q:Q('Isi padu kuboid dalam rajah (8 cm × 5 cm × 4 cm) ialah','160 cm³',['17 cm³','160 cm²','40 cm³'],x=>x,
+     'Isi padu = panjang × lebar × tinggi\n= 8 × 5 × 4 = 160 cm³')},
+ ],
+ gens:{
+  1:[
+   {t:'Jenis sudut',g:()=>{const d=pick([[35,'tirus'],[62,'tirus'],[90,'tegak'],[110,'cakah'],[145,'cakah'],[78,'tirus'],[128,'cakah']]);
+     return Q(`Sudut dalam rajah ialah ${d[0]}°. Apakah jenis sudut itu?`,d[1],['tirus','tegak','cakah','refleks'].filter(x=>x!==d[1]).slice(0,3),x=>x,
+       d[1]==='tirus'?`${d[0]}° kurang daripada 90° → sudut tirus`:d[1]==='tegak'?'Tepat 90° → sudut tegak':`${d[0]}° antara 90° dan 180° → sudut cakah`,
+       svgAngle(d[0]));}},
+   {t:'Sisi poligon',g:()=>{const p=pick([['pentagon',5],['heksagon',6],['heptagon',7],['oktagon',8]]);
+     return Q(`Berapakah bilangan sisi sebuah ${p[0]} sekata?`,String(p[1]),[String(p[1]+1),String(p[1]-1),String(p[1]+2)],x=>x,
+       `${p[0].charAt(0).toUpperCase()+p[0].slice(1)} sekata mempunyai ${p[1]} sisi yang sama panjang.`,svgPolygon(p[1]));}},
+  ],
+  2:[
+   {t:'Perimeter',g:()=>{const p=ri(8,25),l=ri(4,p-1);const ans=2*(p+l);
+     return Q(`Rajah menunjukkan sebuah segi empat tepat. Hitung perimeternya.`,ans,[p*l,p+l,2*p+l],x=>fmt(x)+' cm',
+       `Perimeter = 2 × (panjang + lebar)\n= 2 × (${p} + ${l}) = ${ans} cm`,svgRect(p,l));}},
+   {t:'Jejari & diameter',g:()=>{const j=ri(3,15);
+     return Q(`Jejari sebuah bulatan ialah ${j} cm. Hitung diameternya.`,j*2,[j,j*4,j*2+2],x=>fmt(x)+' cm',
+       `Diameter = 2 × jejari = 2 × ${j} = ${j*2} cm`,svgCircle(j,true));}},
+   {t:'Luas segi tiga',g:()=>{const b=pick([6,8,10,12,14,16]),h=ri(4,12);const ans=b*h/2;
+     return Q(`Rajah menunjukkan sebuah segi tiga dengan tapak dan tingginya. Hitung luasnya.`,ans,[b*h,b+h,ans*2+2],x=>fmt(x)+' cm²',
+       `Luas = ½ × tapak × tinggi\n= ½ × ${b} × ${h} = ${ans} cm²`,svgTriangle(b,h));}},
+  ],
+  3:[
+   {t:'Isi padu kuboid',g:()=>{const p=ri(5,12),l=ri(3,9),t=ri(2,8);const ans=p*l*t;
+     return Q(`Rajah menunjukkan sebuah kotak berbentuk kuboid. Hitung isi padunya.`,ans,[p*l+t,(p+l+t)*2,p*l*t*2],x=>fmt(x)+' cm³',
+       `Isi padu = panjang × lebar × tinggi\n= ${p} × ${l} × ${t} = ${fmt(ans)} cm³`,svgCuboid(p,l,t));}},
+   {t:'Perimeter poligon',g:()=>{const pg=pick([['pentagon',5],['heksagon',6],['oktagon',8]]);const s=ri(4,12);const ans=pg[1]*s;
+     return Q(`Panjang setiap sisi sebuah ${pg[0]} sekata ialah ${s} cm. Hitung perimeternya.`,ans,[ans+s,ans-s,pg[1]+s],x=>fmt(x)+' cm',
+       `Perimeter = bilangan sisi × panjang sisi\n= ${pg[1]} × ${s} = ${ans} cm`,svgPolygon(pg[1]));}},
+   {t:'Isi padu songsang',g:()=>{const p=pick([6,8,10,12]),l=pick([4,5,6]),t=ri(3,8);const V=p*l*t;
+     return Q(`Isi padu sebuah kuboid ialah ${fmt(V)} cm³. Panjangnya ${p} cm dan lebarnya ${l} cm. Hitung tingginya.`,
+       t,[t+2,Math.max(1,t-1),V/(p+l)|0||t+3],x=>fmt(x)+' cm',
+       `Tinggi = Isi padu ÷ (panjang × lebar)\n= ${fmt(V)} ÷ (${p} × ${l}) = ${fmt(V)} ÷ ${p*l} = ${t} cm`);}},
+  ]
+ }},
+/* ================= BAB 7 ================= */
+{id:'b7',ico:'📍',c1:'#26DE81',c2:'#0E9F5C',name:'Koordinat, Nisbah dan Kadaran',
+ desc:'Koordinat pada satah · jarak antara dua koordinat · nisbah dua kuantiti · kuantiti berkadaran',
+ nota:[
+  {t:'Mengenal koordinat',
+   body:'Koordinat menyatakan KEDUDUKAN sesuatu titik pada satah, ditulis <b>(x, y)</b>.\n🚶 <b>x dulu</b> — jalan mendatar (paksi-x)\n🪜 <b>y kemudian</b> — naik menegak (paksi-y)\nIngat: <b>"Jalan dulu, baru naik tangga!"</b>\n<span class="eg">Contoh:\nTitik A(3, 5) → gerak 3 unit ke kanan, kemudian 5 unit ke atas.\nTitik pada paksi-x sentiasa (x, 0). Titik asalan ialah (0, 0).</span><span class="warn">⚠️ Awas: (3, 5) dan (5, 3) ialah dua titik BERBEZA! Susunan sangat penting.</span>',
+   q:Q('Untuk menandakan titik (2, 6), langkah yang betul ialah','2 unit ke kanan, 6 unit ke atas',['6 unit ke kanan, 2 unit ke atas','2 unit ke atas, 6 unit ke kanan','6 unit ke kiri, 2 unit ke bawah'],x=>x,
+     'Koordinat (x, y): nilai x dahulu (mendatar), kemudian nilai y (menegak).\n(2, 6) → 2 ke kanan, 6 ke atas.')},
+  {t:'Jarak antara dua koordinat',
+   body:'Untuk Tahun 6, kita kira jarak antara titik yang berada pada garis mendatar atau menegak yang sama:\n<span class="eg">Kes 1 — nilai y SAMA (garis mendatar):\nJarak = beza nilai x\nA(2, 3), B(6, 3) → jarak = 6 − 2 = 4 unit</span><span class="eg">Kes 2 — nilai x SAMA (garis menegak):\nJarak = beza nilai y\nP(1, 5), Q(1, 2) → jarak = 5 − 2 = 3 unit</span><span class="warn">⚠️ Awas: Kenal pasti dulu nilai mana yang sama, kemudian tolak nilai yang BERBEZA. Jangan tolak nilai yang sama (dapat 0!).</span>',
+   svg:svgCoords(2,3,6,3),
+   q:Q('Jarak antara titik P(1, 5) dengan titik Q(1, 2) ialah','3 unit',['4 unit','7 unit','2 unit'],x=>x,
+     'Kedua-dua titik ada nilai x sama (garis menegak).\nJarak = 5 − 2 = 3 unit')},
+  {t:'Nisbah',
+   body:'Nisbah MEMBANDINGKAN dua kuantiti, ditulis <b>a : b</b> (baca: "a kepada b").\n<span class="eg">Contoh 1:\n6 pen biru dan 9 pen merah.\nNisbah biru kepada merah = 6 : 9 = 2 : 3\n(permudahkan dengan membahagi kedua-duanya dengan 3, macam pecahan!)</span><span class="eg">Contoh 2 (cari nilai daripada nisbah):\nNisbah lelaki : perempuan = 3 : 4. Lelaki ada 12 orang.\n3 bahagian = 12 → 1 bahagian = 4\nPerempuan = 4 × 4 = 16 orang</span><span class="warn">⚠️ Awas: Susunan penting! Nisbah biru:merah = 2:3 TIDAK sama dengan merah:biru = 3:2. Baca soalan — kuantiti mana disebut dahulu?</span>',
+   q:Q('Terdapat 8 gula-gula merah dan 12 gula-gula hijau. Nisbah merah kepada hijau, dalam bentuk termudah, ialah','2 : 3',['3 : 2','4 : 6','1 : 2'],x=>x,
+     '8 : 12 — bahagi kedua-duanya dengan 4\n= 2 : 3 (bentuk termudah)')},
+  {t:'Kadaran',
+   body:'Kadaran menjawab soalan: <b>"kalau sekian banyak bernilai sekian, berapa nilai yang lain?"</b>\nKaedah UNITARI — cari nilai SATU unit dahulu: 🔑\n<span class="eg">Contoh 1:\n3 buku = RM12\n1 buku = 12 ÷ 3 = RM4\n7 buku = 7 × 4 = RM28</span><span class="eg">Contoh 2:\n2 mesin menghasilkan 150 biji bola sejam.\n1 mesin = 75 biji → 5 mesin = 375 biji sejam</span><span class="warn">⚠️ Awas: Jangan terus darab! 3 buku RM12, harga 7 buku BUKAN 12 × 7. Cari harga SATU dulu, baru darab.</span>',
+   q:Q('Harga 4 batang pensel ialah RM6. Berapakah harga 10 batang pensel?','RM15.00',['RM10.00','RM24.00','RM12.00'],x=>x,
+     '1 pensel = RM6 ÷ 4 = RM1.50\n10 pensel = 10 × RM1.50 = RM15.00')},
+ ],
+ gens:{
+  1:[
+   {t:'Nisbah termudah',g:()=>{const g0=pick([2,3,4]);const a=ri(1,4);let b=ri(1,4);if(a===b)b++;
+     const A=a*g0,B=b*g0;const g=gcd(A,B);
+     return Q(`Terdapat ${A} biji bola merah dan ${B} biji bola biru. Nisbah bola merah kepada bola biru, dalam bentuk termudah, ialah`,
+       `${A/g} : ${B/g}`,[`${B/g} : ${A/g}`,`${A} : ${B}`,`${A/g+1} : ${B/g}`],x=>x,
+       `${A} : ${B} — bahagi kedua-duanya dengan ${g}\n= ${A/g} : ${B/g}`);}},
+   {t:'Kadaran mudah',g:()=>{const k=pick([2,3,4]),unit=ri(2,6);const cost=k*unit;const m=k*2;
+     return Q(`Harga ${k} biji epal ialah ${rm(cost)}. Berapakah harga ${m} biji epal?`,cost*2,[cost+m,cost*3,cost*2+unit],rm,
+       `1 biji = ${rm(cost)} ÷ ${k} = ${rm(unit)}\n${m} biji = ${m} × ${rm(unit)} = ${rm(cost*2)}`);}},
+  ],
+  2:[
+   {t:'Nisbah cari jumlah',g:()=>{const a=ri(2,5),b=ri(2,7),unit=ri(3,8);const ka=a*unit,ans=(a+b)*unit;
+     return Q(`Nisbah murid lelaki kepada murid perempuan ialah ${a} : ${b}. Jika terdapat ${ka} orang murid lelaki, berapakah jumlah semua murid?`,
+       ans,[b*unit,ka+b,ans+a],x=>fmt(x)+' orang',
+       `${a} bahagian = ${ka} → 1 bahagian = ${unit}\nJumlah = (${a}+${b}) × ${unit} = ${ans} orang`);}},
+   {t:'Kadaran harga',g:()=>{const k=pick([2,3,4,5]),up=ri(2,8)+pick([0,.5]);const cost=k*up;const m=k+ri(2,5);const ans=+(m*up).toFixed(2);
+     return Q(`Harga ${k} batang pen ialah ${rm(cost)}. Berapakah harga ${m} batang pen yang sama?`,
+       ans,[+(cost+m).toFixed(2),+(ans+up).toFixed(2),+(ans-up).toFixed(2)],rm,
+       `1 batang = ${rm(cost)} ÷ ${k} = ${rm(up)}\n${m} batang = ${m} × ${rm(up)} = ${rm(ans)}`);}},
+  ],
+  3:[
+   {t:'Jarak koordinat',g:()=>{const horiz=Math.random()<.5;let x1,y1,x2,y2,ans;
+     if(horiz){y1=y2=ri(1,5);x1=ri(0,3);x2=x1+ri(2,4);ans=x2-x1;}
+     else{x1=x2=ri(1,6);y1=ri(0,2);y2=y1+ri(2,4);ans=y2-y1;}
+     return Q(`Rajah menunjukkan titik A(${x1}, ${y1}) dan titik B(${x2}, ${y2}). Hitung jarak di antara titik A dengan titik B.`,
+       ans,[ans+1,ans+2,horiz?Math.max(1,y1):Math.max(1,x1)],x=>fmt(x)+' unit',
+       horiz?`Kedua-dua titik pada garis mendatar sama (y = ${y1}).\nJarak = ${x2} − ${x1} = ${ans} unit`
+            :`Kedua-dua titik pada garis menegak sama (x = ${x1}).\nJarak = ${y2} − ${y1} = ${ans} unit`,
+       svgCoords(x1,y1,x2,y2));}},
+   {t:'Kadaran 2 langkah',g:()=>{const mesin=pick([2,3,4]);const per=ri(40,90);const hasil=mesin*per;const m2=mesin*2;
+     return Q(`${mesin} buah mesin menghasilkan ${fmt(hasil)} biji bola dalam sejam. Berapakah bilangan bola yang dihasilkan oleh ${m2} buah mesin dalam sejam?`,
+       hasil*2,[hasil+m2,hasil*3,hasil*2-mesin],fmt,
+       `1 mesin = ${fmt(hasil)} ÷ ${mesin} = ${fmt(per)} biji\n${m2} mesin = ${m2} × ${fmt(per)} = ${fmt(hasil*2)} biji`);}},
+  ]
+ }},
+/* ================= BAB 8 ================= */
+{id:'b8',ico:'📊',c1:'#FF4757',c2:'#B01E2E',name:'Pengurusan Data dan Kebolehjadian',
+ desc:'Mod, median & min (purata) · membaca carta · kebolehjadian sesuatu peristiwa',
+ nota:[
+  {t:'Mod, median & min (purata)',
+   body:'Tiga cara "merumuskan" satu set data: 📊\n<b>MOD</b> — nilai yang paling KERAP muncul\n<b>MEDIAN</b> — nilai TENGAH selepas data DISUSUN menaik\n<b>MIN (purata)</b> — jumlah semua nilai ÷ bilangan nilai\n<span class="eg">Contoh: Data 3, 7, 7, 8, 10\nMod = 7 (muncul 2 kali)\nMedian = 7 (nilai ke-3 daripada 5)\nMin = (3+7+7+8+10) ÷ 5 = 35 ÷ 5 = 7</span><span class="warn">⚠️ Awas untuk median: WAJIB susun data dulu! Data 9, 2, 6 → susun 2, 6, 9 → median = 6, bukan 2.</span>',
+   q:Q('Diberi data: 4, 9, 6, 9, 2\nApakah mod bagi data itu?','9',['6','4','2'],x=>x,
+     'Mod ialah nilai paling kerap.\n9 muncul 2 kali — paling kerap.')},
+  {t:'Purata dengan lebih mendalam',
+   body:'Purata boleh digunakan DUA hala:\n<span class="eg">Hala 1 — cari purata:\nMarkah Aina: 70, 85, 90, 75\nPurata = (70+85+90+75) ÷ 4 = 320 ÷ 4 = 80</span><span class="eg">Hala 2 (KBAT) — purata diberi, cari nilai tersembunyi:\nPurata 4 nombor ialah 20. Tiga daripadanya: 18, 25, 21.\nJumlah semua = 20 × 4 = 80\nJumlah 3 nombor = 18+25+21 = 64\nNombor keempat = 80 − 64 = 16 🔍</span><span class="warn">⚠️ Awas: Rumus penting yang sering dilupakan:\nJUMLAH = purata × bilangan. Inilah kunci soalan KBAT purata!</span>',
+   q:Q('Purata bagi 3 nombor ialah 15. Jumlah ketiga-tiga nombor itu ialah','45',['15','18','30'],x=>x,
+     'Jumlah = purata × bilangan\n= 15 × 3 = 45')},
+  {t:'Membaca carta',
+   body:'Data selalu dipaparkan dalam bentuk visual — <b>carta palang</b>, <b>piktograf</b> dan <b>carta pai</b>.\nTip membaca carta: 👀\n1️⃣ Baca TAJUK dan label paksi dahulu\n2️⃣ Perhatikan SKALA (satu petak = berapa?)\n3️⃣ Bandingkan — palang tertinggi = nilai terbesar\n<span class="eg">Contoh piktograf:\nJika 1 simbol 🍎 mewakili 5 biji epal, maka 4 simbol = 4 × 5 = 20 biji.</span><span class="warn">⚠️ Awas piktograf: SENTIASA semak petunjuk (kunci)! 1 simbol jarang bermaksud 1 unit — selalunya 2, 5, 10 atau lebih.</span>',
+   svg:svgBars([12,18,9,15]),
+   q:Q('Berdasarkan carta palang di atas, apakah nilai terbesar?','18',['12','15','9'],x=>x,
+     'Palang kedua paling tinggi.\nNilainya 18.')},
+  {t:'Kebolehjadian',
+   body:'Kebolehjadian = KEMUNGKINAN sesuatu peristiwa berlaku.\nSkala kebolehjadian (dari 0 ke pasti): 🎲\n<b>Mustahil</b> → <b>kecil kemungkinan</b> → <b>sama kemungkinan</b> → <b>besar kemungkinan</b> → <b>pasti</b>\n<span class="eg">Contoh:\n"Matahari terbit esok" → PASTI ☀️\n"Ayam bertelur emas" → MUSTAHIL 🥚\n"Melambung syiling dapat kepala" → SAMA KEMUNGKINAN (2 permukaan sama)\nKotak ada 5 guli merah, 1 biru → dapat merah: BESAR KEMUNGKINAN</span><span class="warn">⚠️ Awas: "Besar kemungkinan" ≠ "pasti"! Selagi ada peluang gagal walau sedikit, ia belum pasti.</span>',
+   q:Q('Sekeping syiling dilambung. Apakah kebolehjadian mendapat "kepala"?','sama kemungkinan',['pasti','mustahil','besar kemungkinan'],x=>x,
+     'Syiling ada 2 permukaan — kepala atau ekor.\nKedua-duanya sama kemungkinan untuk muncul.')},
+ ],
+ gens:{
+  1:[
+   {t:'Mod',g:()=>{const mv=ri(2,9);let others=shuffle([...Array(10).keys()].map(x=>x+1).filter(x=>x!==mv)).slice(0,3);
+     const vals=shuffle([mv,mv,mv,...others]);
+     return Q(`Diberi satu set data:\n${vals.join(', ')}\nApakah mod bagi set data ini?`,String(mv),others.map(String),x=>x,
+       `Mod ialah nilai paling kerap muncul.\n${mv} muncul 3 kali — paling kerap.`);}},
+   {t:'Kebolehjadian',g:()=>{const ev=pick([['Matahari terbit dari timur esok','pasti'],['Seekor kucing bercakap bahasa Inggeris','mustahil'],['Hujan akan turun di Malaysia bulan ini','besar kemungkinan'],['Salji turun di Kota Kinabalu','mustahil'],['Mendapat nombor 7 apabila melambung sebiji dadu biasa','mustahil'],['Esok ialah hari baharu','pasti']]);
+     return Q(`Apakah kebolehjadian peristiwa berikut?\n"${ev[0]}"`,ev[1],['pasti','mustahil','besar kemungkinan','kecil kemungkinan'].filter(x=>x!==ev[1]).slice(0,3),x=>x,
+       `Peristiwa itu ${ev[1]==='pasti'?'semestinya berlaku':ev[1]==='mustahil'?'tidak mungkin berlaku':'kerap berlaku'} → ${ev[1]}`);}},
+  ],
+  2:[
+   {t:'Purata (min)',g:()=>{const n=pick([4,5]);const avg=ri(8,25);let vals=[],sum=0;
+     for(let i=0;i<n-1;i++){const v=Math.max(1,avg+ri(-5,5));vals.push(v);sum+=v;}
+     vals.push(Math.max(1,avg*n-sum));vals=shuffle(vals);
+     const rs=vals.reduce((a,b)=>a+b,0),ra=+(rs/vals.length).toFixed(1);
+     return Q(`Carta palang menunjukkan satu set data. Hitung purata (min) bagi data itu.`,ra,[rs,+(ra+1).toFixed(1),+(ra-1).toFixed(1)],x=>String(x),
+       `Jumlah = ${vals.join(' + ')} = ${rs}\nPurata = ${rs} ÷ ${vals.length} = ${ra}`,svgBars(vals));}},
+   {t:'Median',g:()=>{let vals=[];while(vals.length<5){const v=ri(2,20);if(!vals.includes(v))vals.push(v);}
+     const sorted=[...vals].sort((a,b)=>a-b);const med=sorted[2];
+     return Q(`Diberi data: ${vals.join(', ')}\nApakah median bagi data itu?`,String(med),[String(sorted[1]),String(sorted[3]),String(sorted[0])],x=>x,
+       `Susun dahulu: ${sorted.join(', ')}\nMedian ialah nilai tengah = ${med}`);}},
+  ],
+  3:[
+   {t:'Purata KBAT',g:()=>{const n=4;const avg=ri(10,30);const known=[];let sum=0;
+     for(let i=0;i<n-1;i++){const v=Math.max(2,avg+ri(-6,6));known.push(v);sum+=v;}
+     let x=avg*n-sum;if(x<1)x=avg;
+     return Q(`Purata bagi empat nombor ialah ${avg}. Tiga daripada nombor itu ialah ${known.join(', ')}. Apakah nombor keempat?`,
+       x,[x+2,Math.abs(x-3)+1,avg+1],fmt,
+       `Jumlah 4 nombor = ${avg} × 4 = ${avg*4}\nJumlah 3 nombor = ${known.join(' + ')} = ${sum}\nNombor keempat = ${avg*4} − ${sum} = ${avg*4-sum<1?avg:avg*4-sum}`);}},
+   {t:'Kebolehjadian guli',g:()=>{const merah=ri(2,5);let biru=ri(2,5);
+     const total=merah+biru;
+     const tanya=Math.random()<.5?'merah':'biru';const k=tanya==='merah'?merah:biru;
+     const lbl=k>total-k?'besar kemungkinan':k<total-k?'kecil kemungkinan':'sama kemungkinan';
+     return Q(`Sebuah kotak mengandungi ${merah} biji guli merah dan ${biru} biji guli biru. Sebiji guli dikeluarkan secara rawak. Apakah kebolehjadian mendapat guli ${tanya}?`,
+       lbl,['besar kemungkinan','kecil kemungkinan','sama kemungkinan','mustahil'].filter(x=>x!==lbl).slice(0,3),x=>x,
+       `Guli ${tanya}: ${k} daripada ${total}.\n${k>total-k?'Lebih banyak daripada warna lain':k<total-k?'Kurang daripada warna lain':'Sama banyak dengan warna lain'} → ${lbl}`);}},
+  ]
+ }},
+];
+
+/* =====================================================
+   KEADAAN & GAMIFIKASI
+===================================================== */
+const QUIZ_LEN=10, EXAM_LEN=15, EXAM_TIME=15*60;
+const LVL_NAMES={1:'Mudah',2:'Sederhana',3:'Sukar'};
+const TITLES=['Pemula 🥚','Perintis 🐣','Mahir 🐥','Handalan 🦅','Pakar 🧠','Grandmaster 👑'];
+const SHOP=[{e:'🦁',p:0},{e:'🐱',p:100},{e:'🦊',p:200},{e:'🐼',p:250},{e:'🐸',p:150},{e:'🐯',p:350},{e:'🦄',p:400},{e:'🤖',p:500},{e:'🐲',p:700},{e:'👾',p:600},{e:'🚀',p:900},{e:'🥷',p:1000}];
+function owned(){return store.get('owned',['🦁']);}
+const $=id=>document.getElementById(id);
+const screens=['s-home','s-bab','s-nota','s-level','s-quiz','s-result','s-exresult','s-report','s-shop','s-misi'];
+const NAVMAP={'s-home':'nav-home','s-misi':'nav-misi','s-shop':'nav-shop','s-report':'nav-report'};
+function show(n){screens.forEach(s=>$(s).classList.toggle('hidden',s!==n));
+  ['nav-home','nav-misi','nav-shop','nav-report'].forEach(id=>$(id).classList.toggle('on',NAVMAP[n]===id));
+  window.scrollTo(0,0);}
+let cur={bab:null,slide:0,lvl:1,mode:'latih',qs:[],idx:0,score:0,answered:false,review:[],cekDone:false,timeLeft:0,timerId:null};
+
+function xp(){return store.get('xp',0);}
+function coins(){return store.get('coins',0);}
+function addCoins(n){store.set('coins',Math.max(0,coins()+n));}
+function gems(){let g=0;BABS.forEach(b=>{const gr=grades(b.id);[1,2,3].forEach(l=>{if(gr[l]==='A')g++;});if(examGrade(b.id)==='A')g++;});return g;}
+function daily(){const d=new Date().toDateString();let o=store.get('daily',null);
+  if(!o||o.day!==d){o={day:d,q:0,ok:0,nota:0,gred:0,cl:{},bonus:false};store.set('daily',o);}return o;}
+function dsave(o){store.set('daily',o);}
+function addXP(n,ev){store.set('xp',xp()+n);addCoins(n);
+  if(ev&&ev.clientX!==undefined){const p=document.createElement('div');p.className='xp-pop';p.textContent='+'+n+' XP';
+    p.style.left=((ev.clientX||160)-20)+'px';p.style.top=((ev.clientY||300)-20)+'px';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),1000);}}
+function playerLevel(){return Math.min(6,Math.floor(xp()/300)+1);}
+function touchStreak(){
+  const today=new Date().toDateString();
+  const last=store.get('lastDay',null);let s=store.get('streak',0);
+  if(last!==today){
+    const y=new Date();y.setDate(y.getDate()-1);
+    s=(last===y.toDateString())?s+1:1;
+    store.set('streak',s);store.set('lastDay',today);
+  }
+  return s;
+}
+function notaDone(babId){return store.get('nota_'+babId,0);}
+function gradeOf(pct){return pct>=80?'A':pct>=60?'B':pct>=40?'C':'-';}
+function grades(babId){return store.get('gred_'+babId,{});}
+function examGrade(babId){return store.get('gredx_'+babId,null);}
+
+/* ============ UTAMA ============ */
+function starsOf(babId){const g=grades(babId);let n=0;[1,2,3].forEach(l=>{if(g[l]==='A')n++;});return n;}
+function renderHome(){
+  const name=store.get('name','');
+  $('hello').textContent=name||'Pelajar Hebat';
+  $('btn-avatar').textContent=store.get('avatar','🦁');
+  const lv=playerLevel();
+  $('lvl-line').textContent=`LVL ${lv} · ${TITLES[lv-1]}`;
+  $('xp-fill').style.width=Math.min(100,(xp()%300)/3)+'%';
+  $('xp-txt').textContent=`${fmt(xp()%300)} / 300 XP`;
+  $('c-coin').textContent=fmt(coins());
+  $('c-gem').textContent=fmt(gems());
+  $('c-streak').textContent='🔥 '+touchStreak();
+  const totalSlides=BABS.reduce((a,b)=>a+b.nota.length,0);
+  const doneSlides=BABS.reduce((a,b)=>a+Math.min(notaDone(b.id),b.nota.length),0);
+  $('c-notes').textContent=Math.round(doneSlides/totalSlides*100)+'%';
+  const grid=$('topic-grid');grid.innerHTML='';
+  BABS.forEach((b,i)=>{
+    const pct=Math.round(Math.min(notaDone(b.id),b.nota.length)/b.nota.length*100);
+    const st=starsOf(b.id);const gx=examGrade(b.id);
+    const el=document.createElement('button');el.className='tcard';
+    el.innerHTML=`<span class="tico">${b.ico}</span>
+      <span class="tnm">${b.name}</span>
+      <span class="tbar"><div style="width:${pct}%"></div><span>${pct}%</span></span>
+      <span class="tstars">${[0,1,2].map(k=>k<st?'⭐':'<span class="off">⭐</span>').join('')}</span>
+      <span class="texam ${gx?'g'+gx:''}">🏁 Ujian: ${gx||'—'}</span>`;
+    el.onclick=()=>openBab(b);
+    grid.appendChild(el);
+  });
+}
+$('btn-avatar').onclick=()=>{
+  const own=owned();const a=store.get('avatar','🦁');
+  const idx=own.indexOf(a);
+  store.set('avatar',own[(idx+1)%own.length]);
+  renderHome();
+};
+$('hello').onclick=()=>{
+  const n=prompt('Siapa nama kamu?',store.get('name',''));
+  if(n!==null&&n.trim())store.set('name',n.trim().slice(0,20));
+  renderHome();
+};
+$('act-misi').onclick=()=>{renderMisi();show('s-misi');};
+$('act-cabaran').onclick=()=>startCabaran();
+$('act-kedai').onclick=()=>{renderShop();show('s-shop');};
+$('act-belajar').onclick=()=>{$('topik-sec').scrollIntoView({behavior:'smooth'});};
+$('nav-home').onclick=()=>{renderHome();show('s-home');};
+$('nav-misi').onclick=()=>{renderMisi();show('s-misi');};
+$('nav-shop').onclick=()=>{renderShop();show('s-shop');};
+$('nav-report').onclick=()=>goReport();
+
+/* ============ KEDAI ============ */
+function renderShop(){
+  $('shop-coin').textContent=fmt(coins());
+  const grid=$('shop-grid');grid.innerHTML='';
+  const own=owned();const curAva=store.get('avatar','🦁');
+  SHOP.forEach(it=>{
+    const has=own.includes(it.e);const using=curAva===it.e;
+    const d=document.createElement('div');d.className='sitem';
+    let btn;
+    if(using)btn='<button class="sbtn used">Dipakai ✓</button>';
+    else if(has)btn=`<button class="sbtn use" data-e="${it.e}" data-act="use">Pakai</button>`;
+    else if(coins()>=it.p)btn=`<button class="sbtn buy" data-e="${it.e}" data-act="buy" data-p="${it.p}">Beli 🪙${it.p}</button>`;
+    else btn=`<button class="sbtn cant" disabled>🪙 ${it.p}</button>`;
+    d.innerHTML=`<span class="se">${it.e}</span><span class="sp">${has?'Dimiliki':'🪙 '+fmt(it.p)}</span>${btn}`;
+    grid.appendChild(d);
+  });
+  grid.querySelectorAll('.sbtn[data-act]').forEach(b=>{
+    b.onclick=()=>{
+      const e=b.dataset.e;
+      if(b.dataset.act==='buy'){
+        const p=+b.dataset.p;
+        if(coins()<p){alert('Syiling tidak cukup! Jawab soalan untuk kumpul 🪙.');return;}
+        addCoins(-p);const own2=owned();own2.push(e);store.set('owned',own2);
+        store.set('avatar',e);confetti(16);
+      }else{store.set('avatar',e);}
+      renderShop();
+    };
+  });
+}
+$('shop-back').onclick=()=>{renderHome();show('s-home');};
+
+/* ============ MISI HARIAN ============ */
+const MISI=[
+ {id:'m1',ico:'✏️',t:'Jawab 15 soalan hari ini',need:d=>d.q,goal:15,r:60},
+ {id:'m2',ico:'📖',t:'Siapkan 2 slaid nota baharu',need:d=>d.nota,goal:2,r:60},
+ {id:'m3',ico:'🎯',t:'Dapatkan 1 gred (mana-mana kuiz/ujian)',need:d=>d.gred,goal:1,r:80},
+];
+function renderMisi(){
+  const d=daily();
+  const list=$('misi-list');list.innerHTML='';
+  MISI.forEach(m=>{
+    const cur2=Math.min(m.need(d),m.goal);
+    const done=cur2>=m.goal;const claimed=!!d.cl[m.id];
+    const el=document.createElement('div');el.className='misi';
+    let btn;
+    if(claimed)btn='<button class="mclaim done">Dituntut ✓</button>';
+    else if(done)btn=`<button class="mclaim ready" data-m="${m.id}" data-r="${m.r}">Tuntut 🪙${m.r}</button>`;
+    else btn=`<button class="mclaim wait" disabled>🪙 ${m.r}</button>`;
+    el.innerHTML=`<span class="mico">${m.ico}</span>
+      <span class="mt">${m.t}<br><span class="mprog">${cur2}/${m.goal}</span></span>${btn}`;
+    list.appendChild(el);
+  });
+  list.querySelectorAll('.mclaim.ready').forEach(b=>{
+    b.onclick=()=>{const d2=daily();if(d2.cl[b.dataset.m])return;
+      d2.cl[b.dataset.m]=true;dsave(d2);addCoins(+b.dataset.r);confetti(12);renderMisi();};
+  });
+}
+$('misi-back').onclick=()=>{renderHome();show('s-home');};
+
+/* ============ CABARAN HARIAN ============ */
+function startCabaran(){
+  cur.mode='cabaran';cur.qs=[];cur.idx=0;cur.score=0;cur.review=[];
+  for(let i=0;i<QUIZ_LEN;i++){
+    const b=pick(BABS);const lvl=pick([1,1,2,2,3]);
+    const gg=pick(b.gens[lvl]);
+    cur.qs.push({...gg.g(),tag:b.ico+' '+gg.t,lvl});
+  }
+  stopTimer();$('q-timer').classList.add('hidden');
+  show('s-quiz');renderQ();
+}
+
+/* ============ MENU BAB ============ */
+function openBab(b){
+  cur.bab=b;
+  $('bab-eyebrow').textContent='Dunia '+(BABS.indexOf(b)+1)+' '+b.ico;
+  $('bab-title').textContent=b.name;
+  $('bab-desc').textContent=b.desc;
+  const done=Math.min(notaDone(b.id),b.nota.length);
+  $('nota-status').textContent=done>=b.nota.length?'✅ Selesai 100% — baca semula bila-bila!':`${done}/${b.nota.length} slaid selesai · ${Math.round(done/b.nota.length*100)}%`;
+  const gx=examGrade(b.id);
+  $('ujian-status').textContent=`${EXAM_LEN} soalan · 15 minit · analisa kelemahan${gx?' · Gred terbaik: '+gx:''}`;
+  show('s-bab');
+}
+$('bab-back').onclick=()=>{renderHome();show('s-home');};
+$('go-nota').onclick=()=>{cur.slide=Math.min(notaDone(cur.bab.id),cur.bab.nota.length-1);renderSlide();show('s-nota');};
+$('go-latih').onclick=()=>{renderLevels();show('s-level');};
+$('go-ujian').onclick=()=>{
+  if(confirm(`🏁 Ujian ${cur.bab.name}\n\n• ${EXAM_LEN} soalan (5 Mudah, 5 Sederhana, 5 Sukar)\n• Masa: 15 minit — kiraan detik bermula serta-merta\n• Tiada jawapan ditunjukkan sehingga tamat\n• Analisa kelemahan diberikan di akhir\n\nSedia untuk mula?`)){
+    startExam();
+  }
+};
+
+/* ============ NOTA ============ */
+function renderSlide(){
+  const b=cur.bab,i=cur.slide,s=b.nota[i];
+  cur.cekDone=notaDone(b.id)>i;
+  $('nota-eyebrow').textContent=`${b.ico} Nota ${i+1} daripada ${b.nota.length}`;
+  $('nota-title').textContent=s.t;
+  $('nota-body').innerHTML=s.body;
+  $('nota-svg').innerHTML=s.svg||'';
+  $('nota-count').textContent=(i+1)+'/'+b.nota.length;
+  $('nota-prog').style.width=(i/b.nota.length*100)+'%';
+  $('cek-q').textContent=s.q.q;
+  $('cek-diagram').innerHTML=s.q.svg||'';
+  $('cek-fb').classList.add('hidden');
+  const box=$('cek-answers');box.innerHTML='';
+  const tags=['A','B','C','D'];
+  s.q.options.forEach((o,j)=>{
+    const bt=document.createElement('button');bt.className='ans';
+    bt.innerHTML=`<span class="tag">${tags[j]}</span><span>${o}</span>`;
+    bt.onclick=(ev)=>cekAnswer(j,bt,ev);
+    box.appendChild(bt);
+  });
+  $('nota-next').classList.toggle('hidden',!cur.cekDone);
+  $('nota-next').textContent=i===b.nota.length-1?'Tamat bab! 🎉':'Seterusnya ➜';
+  if(cur.cekDone){[...box.children].forEach((bt,j)=>{bt.disabled=true;if(j===s.q.answer)bt.classList.add('correct');});}
+}
+function cekAnswer(j,btnEl,ev){
+  const s=cur.bab.nota[cur.slide];
+  const ok=j===s.q.answer;
+  const fb=$('cek-fb');fb.className='feedback '+(ok?'good':'bad');fb.classList.remove('hidden');
+  $('cek-fb-t').textContent=ok?pick(['Betul! Syabas! 🎉','Tepat! 👏','Hebat! ⭐']):'Belum tepat — cuba lagi selepas baca langkah kerja:';
+  $('cek-fb-w').textContent=s.q.working;
+  if(ok){
+    [...$('cek-answers').children].forEach((bt,k)=>{bt.disabled=true;if(k===s.q.answer)bt.classList.add('correct');});
+    if(!cur.cekDone){addXP(15,ev);cur.cekDone=true;}
+    $('nota-next').classList.remove('hidden');
+  }else{
+    btnEl.classList.add('wrong');btnEl.disabled=true;
+  }
+}
+$('nota-next').onclick=()=>{
+  const b=cur.bab;
+  if(notaDone(b.id)<=cur.slide){store.set('nota_'+b.id,cur.slide+1);const d=daily();d.nota++;dsave(d);}
+  if(cur.slide>=b.nota.length-1){
+    confetti(14);openBab(b);
+  }else{cur.slide++;renderSlide();}
+};
+$('nota-back').onclick=()=>openBab(cur.bab);
+
+/* ============ PERINGKAT ============ */
+function renderLevels(){
+  $('lvl-eyebrow').textContent=cur.bab.ico+' '+cur.bab.name;
+  const g=grades(cur.bab.id);
+  const grid=$('lvl-grid');grid.innerHTML='';
+  const icons={1:'🟢',2:'🟡',3:'🔴'};
+  const cls={1:'m-latih',2:'m-nota',3:'m-ujian'};
+  const desc={1:'Soalan asas — mula di sini!',2:'Soalan aras buku teks',3:'KBAT — 2 langkah & mencabar 🔥'};
+  [1,2,3].forEach(l=>{
+    const locked=(l===2&&!g[1])||(l===3&&!g[2]);
+    const el=document.createElement('button');el.className='mode '+cls[l]+(locked?' locked':'');
+    el.innerHTML=`<span class="big">${locked?'🔒':icons[l]}</span>
+      <span><span class="t">${LVL_NAMES[l]} ${g[l]?'· Gred '+g[l]:''}</span><br>
+      <span class="d">${locked?'Dapatkan sekurang-kurangnya gred C pada peringkat sebelum ini':desc[l]}</span></span>`;
+    el.onclick=()=>{ if(locked){alert('🔒 Dapatkan sekurang-kurangnya gred C pada peringkat sebelum ini dahulu!');return;} startQuiz(l); };
+    grid.appendChild(el);
+  });
+}
+$('lvl-back').onclick=()=>openBab(cur.bab);
+
+/* ============ KUIZ (LATIH TUBI) ============ */
+function startQuiz(lvl){
+  cur.mode='latih';cur.lvl=lvl;cur.qs=[];cur.idx=0;cur.score=0;cur.review=[];
+  const gens=cur.bab.gens[lvl];
+  for(let i=0;i<QUIZ_LEN;i++){const gg=pick(gens);cur.qs.push({...gg.g(),tag:gg.t});}
+  stopTimer();$('q-timer').classList.add('hidden');
+  show('s-quiz');renderQ();
+}
+
+/* ============ UJIAN BAB ============ */
+function startExam(){
+  cur.mode='ujian';cur.qs=[];cur.idx=0;cur.score=0;cur.review=[];
+  [1,2,3].forEach(lvl=>{
+    const gens=shuffle(cur.bab.gens[lvl]);
+    for(let i=0;i<5;i++){const gg=gens[i%gens.length];cur.qs.push({...gg.g(),tag:gg.t,lvl});}
+  });
+  cur.timeLeft=EXAM_TIME;
+  $('q-timer').classList.remove('hidden');
+  updateTimer();
+  stopTimer();
+  cur.timerId=setInterval(()=>{
+    cur.timeLeft--;
+    updateTimer();
+    if(cur.timeLeft<=0){stopTimer();finishExam(true);}
+  },1000);
+  show('s-quiz');renderQ();
+}
+function updateTimer(){
+  const t=$('q-timer');
+  t.textContent=pad(Math.floor(cur.timeLeft/60))+':'+pad(cur.timeLeft%60);
+  t.classList.toggle('low',cur.timeLeft<=120);
+}
+function stopTimer(){if(cur.timerId){clearInterval(cur.timerId);cur.timerId=null;}}
+
+/* ============ PAPARAN SOALAN (kongsi) ============ */
+function renderQ(){
+  const q=cur.qs[cur.idx];cur.answered=false;
+  const len=cur.mode==='ujian'?EXAM_LEN:QUIZ_LEN;
+  $('q-topic').textContent=cur.mode==='ujian'
+    ?`🏁 Ujian ${cur.bab.name} · Soalan ${cur.idx+1}`
+    :cur.mode==='cabaran'
+    ?`🏆 Cabaran Harian · ${LVL_NAMES[cur.qs[cur.idx].lvl]}`
+    :`${cur.bab.ico} ${cur.bab.name} · ${LVL_NAMES[cur.lvl]}`;
+  $('q-text').textContent=q.q;
+  $('q-diagram').innerHTML=q.svg||'';
+  $('q-count').textContent=(cur.idx+1)+'/'+len;
+  $('q-prog').style.width=(cur.idx/len*100)+'%';
+  const st=$('stamp');st.className='stamp';st.textContent='';
+  $('feedback').classList.add('hidden');$('q-next').classList.add('hidden');
+  const box=$('answers');box.innerHTML='';
+  const tags=['A','B','C','D'];
+  q.options.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='ans';
+    b.innerHTML=`<span class="tag">${tags[i]}</span><span>${o}</span>`;
+    b.onclick=(ev)=>answer(i,b,ev);box.appendChild(b);
+  });
+}
+function answer(i,btnEl,ev){
+  if(cur.answered)return;cur.answered=true;
+  const q=cur.qs[cur.idx],ok=i===q.answer;
+  q.picked=i;
+  if(ok)cur.score++;
+  {const d=daily();d.q++;if(ok)d.ok++;dsave(d);}
+  cur.review.push({q:q.q,ok,ans:q.options[q.answer],tag:q.tag,answered:true});
+  if(cur.mode==='ujian'){
+    // Gaya peperiksaan: tiada maklum balas, terus soalan seterusnya
+    cur.idx++;
+    if(cur.idx>=EXAM_LEN){stopTimer();finishExam(false);}else{renderQ();}
+    return;
+  }
+  const btns=[...document.querySelectorAll('#answers .ans')];
+  btns.forEach(b=>b.disabled=true);
+  btns[q.answer].classList.add('correct');
+  if(!ok)btnEl.classList.add('wrong');
+  const st=$('stamp');st.textContent=ok?'✓':'✗';st.className='stamp show '+(ok?'ok':'no');
+  const fb=$('feedback');fb.className='feedback '+(ok?'good':'bad');fb.classList.remove('hidden');
+  $('fb-t').textContent=ok?pick(['Betul! Syabas! 🎉','Tepat sekali! 👏','Hebat! ⭐','Power! 💪']):'Belum tepat — lihat langkah kerja:';
+  $('fb-w').textContent=q.working;
+  $('q-next').classList.remove('hidden');
+  $('q-next').textContent=cur.idx===QUIZ_LEN-1?'Lihat keputusan 🏁':'Soalan seterusnya ➜';
+  if(ok)addXP(10*(cur.mode==='cabaran'?q.lvl:cur.lvl),ev);
+}
+$('q-next').onclick=()=>{cur.idx++;cur.idx>=QUIZ_LEN?finish():renderQ();};
+$('q-quit').onclick=()=>{
+  const msg=cur.mode==='ujian'?'Keluar dari ujian? Masa dan jawapan tidak disimpan.':'Keluar dari set ini? Skor tidak disimpan.';
+  if(confirm(msg)){stopTimer();if(cur.mode==='cabaran'){renderHome();show('s-home');}else{openBab(cur.bab);}}
+};
+
+/* ============ KEPUTUSAN LATIH TUBI ============ */
+function finish(){
+  const pct=Math.round(cur.score/QUIZ_LEN*100);
+  const gr=gradeOf(pct);
+  if(cur.mode==='cabaran'){
+    $('res-lvl').textContent='🏆 Cabaran Harian';
+  }else{
+    const g=grades(cur.bab.id);
+    const order={'-':0,'C':1,'B':2,'A':3};
+    if(gr!=='-'&&order[gr]>order[g[cur.lvl]||'-']){g[cur.lvl]=gr;store.set('gred_'+cur.bab.id,g);}
+    $('res-lvl').textContent=`${cur.bab.name} · ${LVL_NAMES[cur.lvl]}`;
+  }
+  if(gr!=='-'){const d=daily();d.gred++;dsave(d);}
+  $('res-grade').textContent=gr==='-'?'💪':gr;
+  $('res-grade').style.color=gr==='A'?'#2ECC71':gr==='B'?'#FFC048':gr==='C'?'#FF6B81':'#FFF';
+  $('res-score').textContent=cur.score+'/'+QUIZ_LEN+' ('+pct+'%)';
+  let msg2=gr==='A'?'Gred A — Sangat Cemerlang! 🏆':gr==='B'?'Gred B — Baik! Sikit lagi untuk gred A!':gr==='C'?'Gred C — Memuaskan. Baca semula nota dan cuba lagi!':'Jangan putus asa! Baca nota dulu, kemudian cuba lagi. 💪';
+  if(cur.mode==='cabaran'){const d=daily();if(!d.bonus){d.bonus=true;dsave(d);addCoins(100);msg2+=' (+100 🪙 bonus harian!)';}}
+  $('res-msg').textContent=msg2;
+  if(gr==='A')confetti(30);
+  const rv=$('review');rv.innerHTML='';
+  cur.review.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='review-item';
+    d.innerHTML=`<span class="mark ${r.ok?'ok':'no'}">${r.ok?'✓':'✗'}</span><b>S${i+1}:</b> ${r.q.split('\n')[0]}<br><span style="color:#5A6E93">Jawapan: <b>${r.ans}</b></span>`;
+    rv.appendChild(d);
+  });
+  show('s-result');
+}
+$('res-home').onclick=()=>{renderHome();show('s-home');};
+$('res-retry').onclick=()=>{cur.mode==='cabaran'?startCabaran():startQuiz(cur.lvl);};
+
+/* ============ KEPUTUSAN UJIAN + ANALISA ============ */
+function finishExam(timeUp){
+  stopTimer();
+  // Soalan tidak dijawab (masa tamat) dikira salah
+  for(let i=cur.review.length;i<EXAM_LEN;i++){
+    const q=cur.qs[i];
+    cur.review.push({q:q.q,ok:false,ans:q.options[q.answer],tag:q.tag,answered:false});
+  }
+  const pct=Math.round(cur.score/EXAM_LEN*100);
+  const gr=gradeOf(pct);
+  const order={'-':0,'C':1,'B':2,'A':3};
+  const prev=examGrade(cur.bab.id);
+  if(gr!=='-'&&order[gr]>order[prev||'-'])store.set('gredx_'+cur.bab.id,gr);
+  // XP + syiling
+  const gain=cur.score*15+(gr==='A'?50:0);
+  store.set('xp',xp()+gain);addCoins(gain);
+  if(gr!=='-'){const d=daily();d.gred++;dsave(d);}
+  // Papar
+  $('ex-bab').textContent=cur.bab.name;
+  $('ex-grade').textContent=gr==='-'?'💪':gr;
+  $('ex-grade').style.color=gr==='A'?'#2ECC71':gr==='B'?'#FFC048':gr==='C'?'#FF6B81':'#FFF';
+  $('ex-score').textContent=`Markah: ${cur.score}/${EXAM_LEN} (${pct}%)`;
+  const used=EXAM_TIME-Math.max(0,cur.timeLeft);
+  $('ex-meta').textContent=(timeUp?'⏰ Masa tamat! · ':'')+`Masa digunakan: ${Math.floor(used/60)} minit ${used%60} saat · +${cur.score*15+(gr==='A'?50:0)} XP`;
+  if(gr==='A')confetti(34);
+  // Analisa mengikut subtopik
+  const agg={};
+  cur.review.forEach(r=>{
+    if(!agg[r.tag])agg[r.tag]={ok:0,total:0};
+    agg[r.tag].total++;if(r.ok)agg[r.tag].ok++;
+  });
+  const rows=Object.entries(agg).map(([tag,v])=>({tag,ok:v.ok,total:v.total,pct:Math.round(v.ok/v.total*100)}))
+    .sort((a,b)=>a.pct-b.pct);
+  const ana=$('ex-ana');ana.innerHTML='';
+  rows.forEach(r=>{
+    const stat=r.pct>=80?['kuat','KUAT 💪']:r.pct>=50?['sed','SEDERHANA']:['lemah','LEMAH ⚠️'];
+    const col=r.pct>=80?'#2ECC71':r.pct>=50?'#FFC048':'#FF4757';
+    const d=document.createElement('div');d.className='ana-row';
+    d.innerHTML=`<span class="anm">${r.tag}<br><span style="font-weight:700;color:#5A6E93;font-size:.72rem">${r.ok}/${r.total} betul</span></span>
+      <span class="abar"><div style="width:${r.pct}%;background:${col}"></div></span>
+      <span class="astat ${stat[0]}">${stat[1]}</span>`;
+    ana.appendChild(d);
+  });
+  const weak=rows.filter(r=>r.pct<50);
+  const mid=rows.filter(r=>r.pct>=50&&r.pct<80);
+  let adv;
+  if(weak.length===0&&mid.length===0)adv='🌟 Hebat! Semua subtopik dikuasai dengan baik. Cuba kekalkan prestasi ini dalam bab lain pula!';
+  else if(weak.length>0)adv=`🎯 Fokus utama: <b>${weak.map(r=>r.tag).join('</b>, <b>')}</b>. Buka semula Nota bab ini dan baca bahagian berkaitan, kemudian latih di peringkat Mudah dahulu sebelum ulang ujian.`;
+  else adv=`👍 Hampir menguasai! Perkukuhkan lagi: <b>${mid.map(r=>r.tag).join('</b>, <b>')}</b> melalui latih tubi Sederhana dan Sukar, kemudian ulang ujian untuk gred A.`;
+  $('ex-advice').innerHTML=adv;
+  // Semakan
+  const rv=$('ex-review');rv.innerHTML='';
+  cur.review.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='review-item';
+    d.innerHTML=`<span class="mark ${r.ok?'ok':'no'}">${r.ok?'✓':'✗'}</span><b>S${i+1}</b> <span style="color:#5A6E93;font-size:.72rem">[${r.tag}]</span>${r.answered?'':' <span style="color:#E03A2F;font-weight:800;font-size:.72rem">TIDAK DIJAWAB</span>'}<br>${r.q.split('\n')[0]}<br><span style="color:#5A6E93">Jawapan betul: <b>${r.ans}</b></span>`;
+    rv.appendChild(d);
+  });
+  show('s-exresult');
+}
+$('ex-home').onclick=()=>{renderHome();show('s-home');};
+$('ex-nota').onclick=()=>{cur.slide=0;renderSlide();show('s-nota');};
+$('ex-retry').onclick=()=>{if(confirm('Mulakan ujian baharu? Soalan akan berbeza.'))startExam();};
+
+function confetti(n){
+  const em=['🎉','⭐','🎊','✨','🏆','💛'];
+  for(let i=0;i<n;i++){
+    const c=document.createElement('div');c.className='confetti';c.textContent=pick(em);
+    c.style.left=ri(2,96)+'vw';c.style.animationDelay=(Math.random()*0.7)+'s';
+    document.body.appendChild(c);setTimeout(()=>c.remove(),3400);
+  }
+}
+
+/* ============ LAPORAN (PIN) ============ */
+const goReport=()=>{
+  let pin=store.get('pin',null);
+  if(!pin){
+    const p=prompt('Cipta PIN 4 digit untuk ibu bapa/guru (kali pertama sahaja):');
+    if(!p||!/^\d{4}$/.test(p.trim())){alert('PIN mesti 4 digit nombor.');return;}
+    store.set('pin',p.trim());pin=p.trim();
+    alert('PIN disimpan! Jangan kongsi dengan murid. 😉');
+  }else{
+    const p=prompt('Masukkan PIN ibu bapa/guru:');
+    if(p!==pin){alert('PIN salah.');return;}
+  }
+  renderReport();show('s-report');
+};
+function renderReport(){
+  $('rep-name').textContent=(store.get('name','')||'Murid')+' '+store.get('avatar','🦁');
+  $('rep-meta').textContent=`XP: ${fmt(xp())} · Tahap ${playerLevel()} (${TITLES[playerLevel()-1]}) · 🔥 ${store.get('streak',0)} hari berturut · ${new Date().toLocaleDateString('ms-MY')}`;
+  const tb=$('rep-body');tb.innerHTML='';
+  BABS.forEach((b,i)=>{
+    const pct=Math.round(Math.min(notaDone(b.id),b.nota.length)/b.nota.length*100);
+    const g=grades(b.id);const gx=examGrade(b.id);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}. ${b.name}</td><td>${pct}%</td><td>${g[1]||'—'}</td><td>${g[2]||'—'}</td><td>${g[3]||'—'}</td><td>${gx||'—'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+$('rep-copy').onclick=()=>{
+  let t=`📊 LAPORAN MATEMATIK TAHUN 6\nMurid: ${store.get('name','')||'-'}\nXP: ${fmt(xp())} · Tahap ${playerLevel()}\nTarikh: ${new Date().toLocaleDateString('ms-MY')}\n\n`;
+  BABS.forEach((b,i)=>{
+    const pct=Math.round(Math.min(notaDone(b.id),b.nota.length)/b.nota.length*100);
+    const g=grades(b.id);const gx=examGrade(b.id);
+    t+=`Bab ${i+1} ${b.name}\n  Nota: ${pct}% | Mudah: ${g[1]||'—'} | Sederhana: ${g[2]||'—'} | Sukar: ${g[3]||'—'} | Ujian: ${gx||'—'}\n`;
+  });
+  t+='\nGred: A ≥80% (Sangat Cemerlang), B 60–79% (Baik), C 40–59% (Memuaskan)';
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(
+    ()=>alert('Laporan disalin! Tampal di WhatsApp untuk kongsi. 📋'),
+    ()=>{prompt('Salin teks laporan di bawah:',t);}
+  );
+};
+$('rep-back').onclick=()=>{renderHome();show('s-home');};
+
+renderHome();
+
+/* ============ PWA ============ */
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
